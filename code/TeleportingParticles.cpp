@@ -18,7 +18,13 @@ glm::vec3 GetParticleInitialPosition(int id, int numParticles)
 
 bool CheckHasTravessedFloor(glm::vec3 particle) 
 {
-	// TODO
+	// This should be done with:
+	// (n * p + d) * (n * p' + d) * n
+	if (particle[1] <= 0.0f)
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -46,8 +52,32 @@ TeleportingParticles::~TeleportingParticles()
 
 void TeleportingParticles::Update(float dt) 
 {
-	// TODO implement logic to make particles fall down
+	glm::vec3 previousPosition;
+	glm::vec3 currentPosition;
+	glm::vec3 previousVelocity;
+	glm::vec3 currentVelocity = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 acceleration = { 0.0f, -9.81f, 0.0f };
 
+	// Logic to make particles fall down
+	for (int i = 0; i < particles->GetNumberOfParticles(); i++)
+	{
+		// Update previous position & velocity
+		previousPosition = particles->GetParticlePosition(i);
+		previousVelocity = currentVelocity;
+
+		// Update position
+		currentPosition[0] = previousPosition[0] + dt * previousVelocity[0];
+		currentPosition[1] = previousPosition[1] + dt * previousVelocity[1];
+		currentPosition[2] = previousPosition[2] + dt * previousVelocity[2];
+
+		// Update velocity
+		currentVelocity[0] = previousVelocity[0] + dt * acceleration[0];
+		currentVelocity[1] = previousVelocity[1] + dt * acceleration[1];
+		currentVelocity[2] = previousVelocity[2] + dt * acceleration[2];
+
+		// Update the paricle's position
+		particles->SetParticlePosition(i, currentPosition);
+	}
 
 	// Check if a particle travessed the floor plane. Restart its position if it had
 	for (int i = 0; i < numParticles; i++) 
