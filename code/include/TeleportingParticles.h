@@ -3,6 +3,7 @@
 
 #include "Simulator.h";
 #include "ParticleSystem.h"
+#include "EulerIntegration.h"
 
 class TeleportingParticles : public Simulator 
 {
