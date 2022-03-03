@@ -1,5 +1,6 @@
 #include <glm\glm.hpp>
 #include "TeleportingParticles.h";
+#include "EulerIntegration.h"
 
 // Auxiliar methods
 #pragma region auxiliar
@@ -52,10 +53,11 @@ TeleportingParticles::~TeleportingParticles()
 
 void TeleportingParticles::Update(float dt) 
 {
+	// THIS IS DONE AT EULER_INTEGRATION
 	glm::vec3 previousPosition;
 	glm::vec3 currentPosition;
 	glm::vec3 previousVelocity;
-	glm::vec3 currentVelocity = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 currentVelocity;
 	glm::vec3 acceleration = { 0.0f, -9.81f, 0.0f };
 
 	// Logic to make particles fall down
@@ -63,7 +65,7 @@ void TeleportingParticles::Update(float dt)
 	{
 		// Update previous position & velocity
 		previousPosition = particles->GetParticlePosition(i);
-		previousVelocity = currentVelocity;
+		previousVelocity = particles->GetParticleVelocity(i);
 
 		// Update position
 		currentPosition[0] = previousPosition[0] + dt * previousVelocity[0];
@@ -77,7 +79,9 @@ void TeleportingParticles::Update(float dt)
 
 		// Update the paricle's position
 		particles->SetParticlePosition(i, currentPosition);
+		particles->SetParticleVelocity(i, currentVelocity);
 	}
+	// //
 
 	// Check if a particle travessed the floor plane. Restart its position if it had
 	for (int i = 0; i < numParticles; i++) 
