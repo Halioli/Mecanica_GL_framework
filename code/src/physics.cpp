@@ -7,21 +7,26 @@
 
 
 #pragma region simulationSelection
-enum class EnabledSimulation {
+enum class EnabledSimulation 
+{
 	RANDOM_STATIC_PARTICLES,
 	TELEPORTING_PARTICLES,
 };
 
 Simulator* currentSimulator;
 EnabledSimulation currentSimulation;
-void setSimulation(EnabledSimulation simulation) {
-	if (currentSimulation == simulation) {
+
+void setSimulation(EnabledSimulation simulation) 
+{
+	if (currentSimulation == simulation) 
+	{
 		return;
 	}
 
 	delete currentSimulator;
 	currentSimulation = simulation;
-	switch (simulation) {
+	switch (simulation) 
+	{
 		case EnabledSimulation::RANDOM_STATIC_PARTICLES:
 			printf("Start the random particles simulation");
 			currentSimulator = new RandomStaticParticles();
@@ -38,11 +43,14 @@ void setSimulation(EnabledSimulation simulation) {
 
 #pragma region GUI
 bool show_test_window = false;
-void GUI() {
+void GUI() 
+{
 	bool show = true;
 	
-	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::BeginMenu("Simulation")) {
+	if (ImGui::BeginMainMenuBar()) 
+	{
+		if (ImGui::BeginMenu("Simulation")) 
+		{
 			if (ImGui::MenuItem("RandomStaticParticles")) { setSimulation(EnabledSimulation::RANDOM_STATIC_PARTICLES); };
 			if (ImGui::MenuItem("TeleportingParticles")) { setSimulation(EnabledSimulation::TELEPORTING_PARTICLES); };
 
@@ -64,17 +72,20 @@ void GUI() {
 #pragma endregion
 
 
-void PhysicsInit() {
+void PhysicsInit() 
+{
 	// The default simulation
 	currentSimulator = new RandomStaticParticles();
 	currentSimulation = EnabledSimulation::RANDOM_STATIC_PARTICLES;
 }
 
-void PhysicsUpdate(float dt) {
+void PhysicsUpdate(float dt) 
+{
 	currentSimulator->Update(dt);
 	currentSimulator->RenderUpdate();
 }
 
-void PhysicsCleanup() {
+void PhysicsCleanup() 
+{
 	delete currentSimulator;
 }

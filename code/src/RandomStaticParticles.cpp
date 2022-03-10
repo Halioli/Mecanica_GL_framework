@@ -7,7 +7,8 @@
 #include "ParticleSystem.h"
 
 
-RandomStaticParticles::RandomStaticParticles() {
+RandomStaticParticles::RandomStaticParticles() 
+{
 	minX = minZ = -5.f;
 	maxX = maxZ = 5.f;
 	minY = 0.f;
@@ -20,7 +21,8 @@ RandomStaticParticles::RandomStaticParticles() {
 	extern bool renderParticles; renderParticles = true;
 }
 
-void RandomStaticParticles::RenderGui() {
+void RandomStaticParticles::RenderGui() 
+{
 	// Create 6 sliders to select the maximum and minimum positions to spawn particles
 	ImGui::SliderFloat("Min x", &minX, -5.f, 0.f);
 	ImGui::SliderFloat("Max x", &maxX, 0.f, 5.f);
@@ -32,8 +34,10 @@ void RandomStaticParticles::RenderGui() {
 	ImGui::SliderFloat("Max z", &maxZ, 0.f, 5.f);
 }
 
-void RandomStaticParticles::Update(float dt) {
-	for (int i = 0; i < particles->GetNumberOfParticles(); i++) {
+void RandomStaticParticles::Update(float dt) 
+{
+	for (int i = 0; i < particles->GetNumberOfParticles(); i++) 
+	{
 		float x = minX + (float)rand() / (RAND_MAX / (maxX - minX));
 		float y = minY + (float)rand() / (RAND_MAX / (maxY - minY));
 		float z = minZ + (float)rand() / (RAND_MAX / (maxZ - minZ));
@@ -43,11 +47,13 @@ void RandomStaticParticles::Update(float dt) {
 	}
 }
 
-void RandomStaticParticles::RenderUpdate() {
+void RandomStaticParticles::RenderUpdate() 
+{
 	particles->Render();
 }
 
-RandomStaticParticles::~RandomStaticParticles(){
+RandomStaticParticles::~RandomStaticParticles()
+{
 	printf("Destruct the random static particles\n");
 	delete particles;
 }

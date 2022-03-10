@@ -3,7 +3,8 @@
 
 // Auxiliar methods
 #pragma region auxiliar
-glm::vec3 GetParticleInitialPosition(int id, int numParticles) {
+glm::vec3 GetParticleInitialPosition(int id, int numParticles) 
+{
 	float margin = 0.1f;
 	float available_length = 2 * (5.f - margin);
 	float offset = available_length / (numParticles-1);
@@ -15,7 +16,8 @@ glm::vec3 GetParticleInitialPosition(int id, int numParticles) {
 	return glm::vec3(x, y, z);
 }
 
-bool CheckHasTravessedFloor(glm::vec3 particle) {
+bool CheckHasTravessedFloor(glm::vec3 particle) 
+{
 	// TODO
 	return false;
 }
@@ -23,11 +25,13 @@ bool CheckHasTravessedFloor(glm::vec3 particle) {
 #pragma endregion
 
 #pragma region class
-TeleportingParticles::TeleportingParticles() {
+TeleportingParticles::TeleportingParticles() 
+{
 	numParticles = 40;
 	particles = new ParticleSystem(numParticles);
 
-	for (int i = 0; i < numParticles; i++) {
+	for (int i = 0; i < numParticles; i++) 
+	{
 		particles->SetParticlePosition(i, GetParticleInitialPosition(i, numParticles));
 	}
 
@@ -35,23 +39,28 @@ TeleportingParticles::TeleportingParticles() {
 	extern bool renderParticles; renderParticles = true;
 }
 
-TeleportingParticles::~TeleportingParticles() {
+TeleportingParticles::~TeleportingParticles() 
+{
 	delete particles;
 }
 
-void TeleportingParticles::Update(float dt) {
+void TeleportingParticles::Update(float dt) 
+{
 	// TODO implement logic to make particles fall down
 
 
 	// Check if a particle travessed the floor plane. Restart its position if it had
-	for (int i = 0; i < numParticles; i++) {
-		if (CheckHasTravessedFloor(particles->GetParticlePosition(i))) {
+	for (int i = 0; i < numParticles; i++) 
+	{
+		if (CheckHasTravessedFloor(particles->GetParticlePosition(i))) 
+		{
 			particles->SetParticlePosition(i, GetParticleInitialPosition(i, numParticles));
 		}
 	}
 }
 
-void TeleportingParticles::RenderUpdate() {
+void TeleportingParticles::RenderUpdate() 
+{
 	particles->Render();
 }
 
