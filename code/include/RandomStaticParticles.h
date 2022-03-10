@@ -3,8 +3,7 @@
 #include "Simulator.h";
 #include "ParticleSystem.h"
 
-class RandomStaticParticles : public Simulator 
-{
+class RandomStaticParticles : public Simulator {
 public:
 	RandomStaticParticles();
 	~RandomStaticParticles();

@@ -3,10 +3,8 @@
 
 #include "Simulator.h";
 #include "ParticleSystem.h"
-#include "EulerIntegration.h"
 
-class TeleportingParticles : public Simulator 
-{
+class TeleportingParticles : public Simulator {
 public:
 	TeleportingParticles();
 	~TeleportingParticles();
@@ -14,7 +12,6 @@ public:
 	void Update(float dt);
 	void RenderUpdate();
 	void RenderGui();
-
 private:
 	ParticleSystem* particles;
 	int numParticles;

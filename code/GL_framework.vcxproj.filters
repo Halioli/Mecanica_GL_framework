@@ -45,16 +45,10 @@
     <ClCompile Include="src\RandomStaticParticles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
+    <ClCompile Include="src\ParticleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TeleportingParticles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EulerIntegration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Maths.cpp">
+    <ClCompile Include="src\TeleportingParticles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,12 +63,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\TeleportingParticles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EulerIntegration.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Maths.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

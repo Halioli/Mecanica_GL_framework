@@ -1,7 +1,6 @@
 #pragma once
 
-class Simulator 
-{
+class Simulator {
 public:
 	virtual void Update(float dt) = 0;
 	virtual void RenderUpdate() = 0;
