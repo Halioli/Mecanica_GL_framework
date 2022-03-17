@@ -2,12 +2,10 @@
 
 EulerIntegrator::EulerIntegrator()
 {
-	eulerIntegrator = new EulerIntegrator;
 }
 
 EulerIntegrator::~EulerIntegrator()
 {
-	delete eulerIntegrator;
 }
 
 void EulerIntegrator::Step(ParticleSystem* ps, float dt)
