@@ -54,7 +54,7 @@
     <ClCompile Include="src\EulerIntegrator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Math.cpp">
+    <ClCompile Include="src\Geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,7 +74,7 @@
     <ClInclude Include="include\EulerIntegrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Math.h">
+    <ClInclude Include="include\Geometry.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
