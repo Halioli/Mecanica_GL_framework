@@ -11,6 +11,7 @@ enum class EnabledSimulation
 {
 	RANDOM_STATIC_PARTICLES,
 	TELEPORTING_PARTICLES,
+	AA2,
 };
 
 Simulator* currentSimulator;
@@ -37,6 +38,11 @@ void setSimulation(EnabledSimulation simulation)
 			currentSimulator = new TeleportingParticles();
 			break;
 		;;
+		case EnabledSimulation::AA2:
+			printf("Start the AA2");
+			currentSimulator = new TeleportingParticles();
+			break;
+			;;
 	}
 }
 #pragma endregion
@@ -53,6 +59,7 @@ void GUI()
 		{
 			if (ImGui::MenuItem("RandomStaticParticles")) { setSimulation(EnabledSimulation::RANDOM_STATIC_PARTICLES); };
 			if (ImGui::MenuItem("TeleportingParticles")) { setSimulation(EnabledSimulation::TELEPORTING_PARTICLES); };
+			if (ImGui::MenuItem("AA2")) { setSimulation(EnabledSimulation::AA2); };
 
 			ImGui::EndMenu();
 		}
