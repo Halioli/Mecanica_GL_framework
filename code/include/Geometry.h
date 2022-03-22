@@ -22,4 +22,14 @@ private:
 
 };
 
+class SphereCreated {
+
+public:
+    SphereCreated();
+    ~SphereCreated();
+
+    void ChechCollisionSphere();
+private:
+    SphereCreated* sphereC;
+};
 

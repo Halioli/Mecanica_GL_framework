@@ -65,6 +65,8 @@ void TeleportingParticles::Update(float dt)
 			particles->SetParticlePosition(i, GetParticleInitialPosition(i, numParticles));
 		}
 	}
+
+	
 }
 
 void TeleportingParticles::RenderUpdate()

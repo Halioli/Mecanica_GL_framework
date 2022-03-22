@@ -29,4 +29,20 @@ void Plane::CheckColision(glm::vec3 pointPos, glm::vec3 pointVel)
         //v = v' -2(n * v') * n
         //glm::vec3 mirrorVelocity = pointVel - 2 * (planeNormal * pointVel) * planeNormal;
     }
+
+
 }
+
+SphereCreated::SphereCreated() {
+
+}
+
+SphereCreated::~SphereCreated() {
+
+}
+
+namespace SphereFunctions {
+
+
+};
+

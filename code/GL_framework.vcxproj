@@ -138,6 +138,7 @@ xcopy $(ProjectDir)libs\SDL2.dll $(OutDir) /y /d</Command>
     <ClCompile Include="include\imgui\imgui_demo.cpp" />
     <ClCompile Include="include\imgui\imgui_draw.cpp" />
     <ClCompile Include="include\imgui\imgui_impl_sdl_gl3.cpp" />
+    <ClCompile Include="src\AA2.cpp" />
     <ClCompile Include="src\EulerIntegrator.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -149,6 +150,7 @@ xcopy $(ProjectDir)libs\SDL2.dll $(OutDir) /y /d</Command>
     <ClCompile Include="src\TeleportingParticles.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\AA2.h" />
     <ClInclude Include="include\EulerIntegrator.h" />
     <ClInclude Include="include\Geometry.h" />
     <ClInclude Include="include\ParticleSystem.h" />
