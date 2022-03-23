@@ -3,12 +3,15 @@
 #include "AA2.h"
 
 
+float radius = 4.f;
+
 namespace Sphere
 {
-	extern void setupSphere(glm::vec3 pos = glm::vec3(0.f, 1.f, 0.f), float radius = 1.f);
-	extern void cleanupSphere();
 	extern void updateSphere(glm::vec3 pos, float radius = 1.f);
-	extern void drawSphere();
+}
+
+namespace Capsule {
+	extern void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
 }
 
 // Auxiliar methods
@@ -51,15 +54,23 @@ AA2::AA2()
 		particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
 	}
 
+	sphereCenter = glm::vec3(0.f, 4.f, 0.f);
+	sphereRadius = 1.f;
+
+	capsuleA = glm::vec3(2.f, 3.f, 0.f);
+	capsuleB = glm::vec3(4.f, 4.f, 0.f);
+	capsuleRadius = 1.f;
 	// Enable the rendering of particles in the framework 
 	extern bool renderParticles; renderParticles = true;
-
-	
+	extern bool renderSphere; renderSphere = true;
+	extern bool renderCapsule; renderCapsule = true;
 }
 
 AA2::~AA2()
 {
 	delete particles;
+	renderSphere = false;
+	renderCapsule = false;
 }
 
 void AA2::Update(float dt)
@@ -76,13 +87,13 @@ void AA2::Update(float dt)
 			particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
 		}
 	}
-
-	Sphere::updateSphere(glm::vec3 (5, 5, 5), 40.f);
 }
 
 void AA2::RenderUpdate()
 {
 	particles->Render();
+	Sphere::updateSphere(sphereCenter, sphereRadius);
+	Capsule::updateCapsule(capsuleA, capsuleB, capsuleRadius);
 }
 
 void AA2::RenderGui() {};

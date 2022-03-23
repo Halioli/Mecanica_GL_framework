@@ -141,6 +141,7 @@ xcopy $(ProjectDir)libs\SDL2.dll $(OutDir) /y /d</Command>
     <ClCompile Include="src\AA2.cpp" />
     <ClCompile Include="src\EulerIntegrator.cpp" />
     <ClCompile Include="src\Geometry.cpp" />
+    <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ParticleSystem.cpp" />
     <ClCompile Include="src\RandomStaticParticles.cpp" />
@@ -153,6 +154,7 @@ xcopy $(ProjectDir)libs\SDL2.dll $(OutDir) /y /d</Command>
     <ClInclude Include="include\AA2.h" />
     <ClInclude Include="include\EulerIntegrator.h" />
     <ClInclude Include="include\Geometry.h" />
+    <ClInclude Include="include\GUI.h" />
     <ClInclude Include="include\ParticleSystem.h" />
     <ClInclude Include="include\RandomStaticParticles.h" />
     <ClInclude Include="include\Simulator.h" />

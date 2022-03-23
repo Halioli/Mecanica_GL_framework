@@ -4,6 +4,7 @@
 
 #include "RandomStaticParticles.h"
 #include "TeleportingParticles.h"
+#include "AA2.h"
 
 
 #pragma region simulationSelection
@@ -40,7 +41,7 @@ void setSimulation(EnabledSimulation simulation)
 		;;
 		case EnabledSimulation::AA2:
 			printf("Start the AA2");
-			currentSimulator = new TeleportingParticles();
+			currentSimulator = new AA2();
 			break;
 			;;
 	}

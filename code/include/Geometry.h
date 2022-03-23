@@ -18,8 +18,6 @@ public:
 
 private:
     Plane* plane;
-
-
 };
 
 class SphereCreated {

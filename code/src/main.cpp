@@ -140,6 +140,4 @@ int main(int argc, char** argv)
 	SDL_DestroyWindow(mainwindow);
 	SDL_Quit();
 	return 0;
-
-	
 }
