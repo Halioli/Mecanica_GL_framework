@@ -21,9 +21,7 @@ public:
 private:
 	ParticleSystem* particles;
 	int numParticles;
-	
-	glm::vec3 sphereCenter;
-	float sphereRadius;
+
 
 	glm::vec3 capsuleA;
 	glm::vec3 capsuleB;

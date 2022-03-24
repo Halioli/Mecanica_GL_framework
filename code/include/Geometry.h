@@ -20,14 +20,21 @@ private:
     Plane* plane;
 };
 
-class SphereCreated {
+class CustomSphere {
 
 public:
-    SphereCreated();
-    ~SphereCreated();
+    CustomSphere(float radiusS, glm::vec3 centerS);
+    ~CustomSphere();
 
-    void ChechCollisionSphere();
+    bool CheckCollisionSphere(glm::vec3 particlePos);
+    void CalculateParticleMirror(glm::vec3 previousParticlePos);
+    glm::vec3 CalculatePointOfCollision(glm::vec3 particlePos);
+
+    glm::vec3 sphereCenter;
+    float sphereRadius;
+
 private:
-    SphereCreated* sphereC;
+    CustomSphere* sphereC;
+
 };
 
