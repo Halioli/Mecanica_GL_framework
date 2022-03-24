@@ -58,8 +58,15 @@ bool CustomSphere::CheckCollisionSphere(glm::vec3 particlePos)
 
 void CustomSphere::CalculateParticleMirror(glm::vec3 previousParticlePos) 
 {
+    glm::vec3 mirrorPoint;
 
-    glm::vec3 pointOfCollision = CalculatePointOfCollision(previousParticlePos)
+    glm::vec3 pointOfCollision = CalculatePointOfCollision(previousParticlePos);
+    glm::vec3 normalVectorPlane = CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter);
+    float planeD = CalculateDPlane(normalVectorPlane, pointOfCollision);
+
+    //Apply form: P = P' - 2(n * P' + D) * n
+    // <<<<<<<<<<<<<<<<<<<<<< Acabar de fer >>>>>>>>>>>>>>>>>>>>>>>>>
+    //mirrorPoint = /*actualParticlePos*/ -2(normalVectorPlane * /*actualParticlePos*/ +planeD) * normalVectorPlane;
 }
 
 //Aixo es crida a CalculateParticleMirror()
@@ -105,6 +112,27 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
     }
     return pointOfCollision;
 
+}
+
+float CalculateDPlane(glm::vec3 normalVector, glm::vec3 planePoint)
+{
+    //Components of plane's normal vector
+    float A, B, C, D;
+    
+    //Components of plane's point 
+    float x, y, z;
+
+    A = normalVector.x;
+    B = normalVector.y;
+    C = normalVector.z;
+
+    x = planePoint.x;
+    y = planePoint.y;
+    z = planePoint.z;
+    
+    D = -((A * x) + (B * y) + (C * z));
+    
+    return D;
 }
 
 
