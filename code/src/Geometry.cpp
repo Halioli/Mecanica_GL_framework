@@ -87,13 +87,12 @@ void CustomSphere::CalculateParticleMirror(ParticleSystem* particleSystem, int p
     float planeD = CalculateDPlane(normalVectorPlane, pointOfCollision);
 
     //Apply form: P = P' - 2(n * P' + D) * n
-    mirrorPos = particleSystem[particleId].GetCurrentParticlePosition(particleId) - 2.f * (normalVectorPlane * particleSystem[particleId].GetCurrentParticlePosition(particleId) + planeD) * normalVectorPlane;
-    //mirrorPos = actualParticlePos -2(normalVectorPlane * actualParticlePos + planeD) * normalVectorPlane;
+    mirrorPos = particleSystem[particleId].GetCurrentParticlePosition(particleId) - 2.f * 
+                (normalVectorPlane * particleSystem[particleId].GetCurrentParticlePosition(particleId) + planeD) * normalVectorPlane;
 
     // Apply form: V = V' - 2(n * V') * n
-    // <<<<<<<<<<<<<<<<<<<<<< TO DO >>>>>>>>>>>>>>>>>>>>>>>>>
-    mirrorVel = particleSystem[particleId].GetCurrentParticlePosition(particleId) - 2.f * (normalVectorPlane * particleSystem[particleId].GetCurrentParticlePosition(particleId)) * normalVectorPlane;
-    //mirrorVel = actualParticleVel - 2 * (normalVectorPlane * actualParticleVel) * normalVectorPlane;
+    mirrorVel = particleSystem[particleId].GetCurrentParticlePosition(particleId) - 2.f * 
+                (normalVectorPlane * particleSystem[particleId].GetCurrentParticlePosition(particleId)) * normalVectorPlane;
 }
 
 //Aixo es crida a CalculateParticleMirror()
