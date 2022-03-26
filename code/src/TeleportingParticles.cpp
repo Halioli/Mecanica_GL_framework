@@ -60,7 +60,7 @@ void TeleportingParticles::Update(float dt)
 	// Check if a particle travessed the floor plane. Restart its position if it had
 	for (int i = 0; i < numParticles; i++)
 	{
-		if (CheckHasTravessedFloor(particles->GetParticlePosition(i)))
+		if (CheckHasTravessedFloor(particles->GetCurrentParticlePosition(i)))
 		{
 			particles->SetParticlePosition(i, GetParticleInitialPosition(i, numParticles));
 		}
