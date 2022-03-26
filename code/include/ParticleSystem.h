@@ -10,11 +10,20 @@ public:
 
 	void Render();
 	void SetParticlePosition(int particleId, glm::vec3 position);
-	glm::vec3 GetParticlePosition(int particleId);
+	glm::vec3 GetCurrentParticlePosition(int particleId);
 	void SetParticleVelocity(int particleId, glm::vec3 velocity);
-	glm::vec3 GetParticleVelocity(int particleId);
+	glm::vec3 GetCurrentParticleVelocity(int particleId);
+
+	void SetPreviousParticlePosition(int particleId);
+	glm::vec3 GetPreviousParticlePosition(int particleId);
+	void SetPreviousParticleVelocity(int particleId);
+	glm::vec3 GetPreviousParticleVelocity(int particleId);
+
 private:
 	int maxParticles;
-	glm::vec3* positions;
-	glm::vec3* velocities;
+	glm::vec3* currentPositions;
+	glm::vec3* currentVelocities;
+
+	glm::vec3* previousPositions;
+	glm::vec3* previousVelocities;
 };

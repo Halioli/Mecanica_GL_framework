@@ -80,14 +80,14 @@ void AA2::Update(float dt)
 	// Check if a particle travessed the floor plane. Restart its position if it had
 	for (int i = 0; i < numParticles; i++)
 	{
-		if (CheckHasTravessedFloorAA2(particles->GetParticlePosition(i)))
+		if (CheckHasTravessedFloorAA2(particles->GetCurrentParticlePosition(i)))
 		{
 			particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
 		}
 
-		if (Sphere::customSphere.CheckCollisionSphere(particles->GetParticlePosition(i)))
+		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
 		{
-			
+			Sphere::customSphere.CalculateParticleMirror(particles, i);
 		}
 	}
 }

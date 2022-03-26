@@ -2,6 +2,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "ParticleSystem.h"
 
 class Plane
 {
@@ -27,7 +28,7 @@ public:
     ~CustomSphere();
 
     bool CheckCollisionSphere(glm::vec3 particlePos);
-    void CalculateParticleMirror(glm::vec3 previousParticlePos);
+    void CalculateParticleMirror(ParticleSystem* particleSystem, int particleId);
     glm::vec3 CalculatePointOfCollision(glm::vec3 particlePos);
 
     glm::vec3 sphereCenter;

@@ -20,8 +20,8 @@ void EulerIntegrator::Step(ParticleSystem* ps, float dt)
 	for (int i = 0; i < ps->GetNumberOfParticles(); i++)
 	{
 		// Update previous position & velocity
-		previousPosition = ps->GetParticlePosition(i);
-		previousVelocity = ps->GetParticleVelocity(i);
+		previousPosition = ps->GetCurrentParticlePosition(i);
+		previousVelocity = ps->GetCurrentParticleVelocity(i);
 
 		// Update position
 		currentPosition[0] = previousPosition[0] + dt * previousVelocity[0];
