@@ -4,7 +4,7 @@ glm::vec3 CalculateVectorBetweenTwoPoints(glm::vec3 firstP, glm::vec3 secondP) {
     return firstP - secondP;
 }
 
-float CalculateDPlane(glm::vec3 normalVector, glm::vec3 planePoint)
+float CalculatePlaneD(glm::vec3 normalVector, glm::vec3 planePoint)
 {
     //Components of plane's normal vector
     float A, B, C, D;
@@ -47,15 +47,13 @@ void Plane::CheckColision(glm::vec3 pointPos, glm::vec3 pointVel)
 
         //planeNormal.x * pointPos.x + planeNormal.y * pointPos.y + planeNormal.z * pointPos.z + D = 0
         float dValue = -(pointPos.x * planeNormal.x + pointPos.y * planeNormal.y + pointPos.z * planeNormal.z);
-
-        // == Mirror ==
-        //p = p' -2(n * p' + d) * n
-        //glm::vec3 mirrorPosition = pointPos - 2 * (planeNormal * pointPos + dValue) * planeNormal;
-        //v = v' -2(n * v') * n
-        //glm::vec3 mirrorVelocity = pointVel - 2 * (planeNormal * pointVel) * planeNormal;
     }
 
-
+    // == Mirror ==
+    //p = p' -2(n * p' + d) * n
+    //glm::vec3 mirrorPosition = pointPos - 2 * (planeNormal * pointPos + dValue) * planeNormal;
+    //v = v' -2(n * v') * n
+    //glm::vec3 mirrorVelocity = pointVel - 2 * (planeNormal * pointVel) * planeNormal;
 }
 
 CustomSphere::CustomSphere(float radiusS, glm::vec3 centerS) {
@@ -85,7 +83,7 @@ glm::vec3* CustomSphere::CalculateParticleMirror(glm::vec3 previousPos, glm::vec
 
     glm::vec3 pointOfCollision = CalculatePointOfCollision(previousPos);
     glm::vec3 normalVectorPlane = CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter);
-    float planeD = CalculateDPlane(normalVectorPlane, pointOfCollision);
+    float planeD = CalculatePlaneD(normalVectorPlane, pointOfCollision);
 
     //Apply form: P = P' - 2(n * P' + D) * n
     mirrorRes[0] = currentPos - 2.f * (normalVectorPlane * currentPos + planeD) * normalVectorPlane;
@@ -125,8 +123,8 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
         pow(vecRes.y, 2) +
         pow(vecRes.z, 2);
 
-    λRect[0] = ( - (b) + sqrt(pow(b, 2) - 4 * a * c)) / 2 * a;
-    λRect[1] = (-(b) - sqrt(pow(b, 2) - 4 * a * c)) / 2 * a;
+    λRect[0] = ( - (b) + sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+    λRect[1] = ( - (b) - sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
 
 
     if (λRect[0] >= λRect[1])
