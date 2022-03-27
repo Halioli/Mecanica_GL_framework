@@ -90,3 +90,13 @@ glm::vec3 ParticleSystem::GetPreviousParticleVelocity(int particleId)
 {
 	return previousVelocities[particleId];
 }
+
+void ParticleSystem::SetMirrorParticlePosition(int particleId, glm::vec3 position)
+{
+	currentPositions[particleId] = position;
+}
+
+void ParticleSystem::SetMirrorParticleVelocity(int particleId, glm::vec3 velocity)
+{
+	currentVelocities[particleId] = velocity;
+}

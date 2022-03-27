@@ -77,22 +77,23 @@ bool CustomSphere::CheckCollisionSphere(glm::vec3 particlePos)
 }
 
 
-void CustomSphere::CalculateParticleMirror(ParticleSystem* particleSystem, int particleId)
+glm::vec3* CustomSphere::CalculateParticleMirror(glm::vec3 previousPos, glm::vec3 currentPos, glm::vec3 currentVel)
 {
+    glm::vec3 mirrorRes[2];
     glm::vec3 mirrorPos;
     glm::vec3 mirrorVel;
 
-    glm::vec3 pointOfCollision = CalculatePointOfCollision(particleSystem[particleId].GetPreviousParticlePosition(particleId));
+    glm::vec3 pointOfCollision = CalculatePointOfCollision(previousPos);
     glm::vec3 normalVectorPlane = CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter);
     float planeD = CalculateDPlane(normalVectorPlane, pointOfCollision);
 
     //Apply form: P = P' - 2(n * P' + D) * n
-    mirrorPos = particleSystem[particleId].GetCurrentParticlePosition(particleId) - 2.f * 
-                (normalVectorPlane * particleSystem[particleId].GetCurrentParticlePosition(particleId) + planeD) * normalVectorPlane;
+    mirrorRes[0] = currentPos - 2.f * (normalVectorPlane * currentPos + planeD) * normalVectorPlane;
 
     // Apply form: V = V' - 2(n * V') * n
-    mirrorVel = particleSystem[particleId].GetCurrentParticlePosition(particleId) - 2.f * 
-                (normalVectorPlane * particleSystem[particleId].GetCurrentParticlePosition(particleId)) * normalVectorPlane;
+    mirrorRes[1] = currentVel - 2.f * (normalVectorPlane * currentVel) * normalVectorPlane;
+
+    return mirrorRes;
 }
 
 //Aixo es crida a CalculateParticleMirror()

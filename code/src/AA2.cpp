@@ -74,6 +74,7 @@ AA2::~AA2()
 void AA2::Update(float dt)
 {
 	EulerIntegrator eulerInt;
+	glm::vec3* mirrorRes;
 
 	eulerInt.Step(particles, dt);
 
@@ -87,7 +88,10 @@ void AA2::Update(float dt)
 
 		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
 		{
-			Sphere::customSphere.CalculateParticleMirror(particles, i);
+			mirrorRes = Sphere::customSphere.CalculateParticleMirror(particles->GetPreviousParticlePosition(i), particles->GetCurrentParticlePosition(i), particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
 	}
 }

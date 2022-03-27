@@ -19,6 +19,9 @@ public:
 	void SetPreviousParticleVelocity(int particleId);
 	glm::vec3 GetPreviousParticleVelocity(int particleId);
 
+	void SetMirrorParticlePosition(int particleId, glm::vec3 position);
+	void SetMirrorParticleVelocity(int particleId, glm::vec3 velocity);
+
 private:
 	int maxParticles;
 	glm::vec3* currentPositions;
