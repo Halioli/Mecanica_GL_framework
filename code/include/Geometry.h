@@ -7,7 +7,7 @@
 class Plane
 {
 public:
-    Plane();
+    Plane(glm::vec3 planePoint, glm::vec3 planeNormal, float planeD);
     ~Plane();
 
     glm::vec3 planePoint;
@@ -15,7 +15,7 @@ public:
     float planeD;
 
     void CheckColision(glm::vec3 pointPos, glm::vec3 pointVel);
-
+    glm::vec3* CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 currentVel);
 
 private:
     Plane* plane;

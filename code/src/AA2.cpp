@@ -3,6 +3,16 @@
 #include "AA2.h"
 #include "Geometry.h"
 
+namespace Planes
+{
+	Plane bottomPlane(glm::vec3(1.f, 0.f, 1.f), glm::vec3(), 1.f);
+
+	Plane topPlane(glm::vec3(), glm::vec3(), 0.f);
+	Plane leftPlane(glm::vec3(), glm::vec3(), 0.f);
+	Plane rightlane(glm::vec3(), glm::vec3(), 0.f);
+	Plane frontPlane(glm::vec3(), glm::vec3(), 0.f);
+	Plane backPlane(glm::vec3(), glm::vec3(), 0.f);
+}
 
 namespace Sphere
 {
@@ -10,7 +20,8 @@ namespace Sphere
 	CustomSphere customSphere(1.f, glm::vec3(0.f, 4.f, 0.f));
 }
 
-//namespace Capsule {
+//namespace Capsule 
+//{
 //	extern void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
 //}
 
@@ -81,6 +92,12 @@ void AA2::Update(float dt)
 	// Check if a particle travessed the floor plane. Restart its position if it had
 	for (int i = 0; i < numParticles; i++)
 	{
+		particles->IncrementCurrentLifespan(i);
+		if (particles->CheckParticleLifespan(i))
+		{
+			particles->ResetParticle(i);
+		}
+
 		if (CheckHasTravessedFloorAA2(particles->GetCurrentParticlePosition(i)))
 		{
 			particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
@@ -88,7 +105,8 @@ void AA2::Update(float dt)
 
 		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
 		{
-			mirrorRes = Sphere::customSphere.CalculateParticleMirror(particles->GetPreviousParticlePosition(i), particles->GetCurrentParticlePosition(i), particles->GetCurrentParticleVelocity(i));
+			mirrorRes = Sphere::customSphere.CalculateParticleMirror(particles->GetPreviousParticlePosition(i), 
+							particles->GetCurrentParticlePosition(i), particles->GetCurrentParticleVelocity(i));
 
 			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);

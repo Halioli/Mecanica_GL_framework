@@ -25,9 +25,11 @@ float CalculatePlaneD(glm::vec3 normalVector, glm::vec3 planePoint)
     return D;
 }
 
-Plane::Plane()
+Plane::Plane(glm::vec3 point, glm::vec3 normal, float d)
 {
-
+    planePoint = point;
+    planeNormal = normal;
+    planeD = d;
 }
 
 Plane::~Plane()
@@ -48,21 +50,29 @@ void Plane::CheckColision(glm::vec3 pointPos, glm::vec3 pointVel)
         //planeNormal.x * pointPos.x + planeNormal.y * pointPos.y + planeNormal.z * pointPos.z + D = 0
         float dValue = -(pointPos.x * planeNormal.x + pointPos.y * planeNormal.y + pointPos.z * planeNormal.z);
     }
+}
+
+glm::vec3* Plane::CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 currentVel)
+{
+    glm::vec3 mirrorRes[2];
 
     // == Mirror ==
     //p = p' -2(n * p' + d) * n
-    //glm::vec3 mirrorPosition = pointPos - 2 * (planeNormal * pointPos + dValue) * planeNormal;
+    mirrorRes[0] = currentPos - 2.f * (planeNormal * currentPos + planeD) * planeNormal;
     //v = v' -2(n * v') * n
-    //glm::vec3 mirrorVelocity = pointVel - 2 * (planeNormal * pointVel) * planeNormal;
+    mirrorRes[1] = currentVel - 2.f * (planeNormal * currentVel) * planeNormal;
+
+    return mirrorRes;
 }
 
-CustomSphere::CustomSphere(float radiusS, glm::vec3 centerS) {
-
+CustomSphere::CustomSphere(float radiusS, glm::vec3 centerS) 
+{
     sphereRadius = radiusS;
     sphereCenter = centerS;
 }
 
-CustomSphere::~CustomSphere() {
+CustomSphere::~CustomSphere() 
+{
 
 }
 
@@ -78,8 +88,6 @@ bool CustomSphere::CheckCollisionSphere(glm::vec3 particlePos)
 glm::vec3* CustomSphere::CalculateParticleMirror(glm::vec3 previousPos, glm::vec3 currentPos, glm::vec3 currentVel)
 {
     glm::vec3 mirrorRes[2];
-    glm::vec3 mirrorPos;
-    glm::vec3 mirrorVel;
 
     glm::vec3 pointOfCollision = CalculatePointOfCollision(previousPos);
     glm::vec3 normalVectorPlane = CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter);
