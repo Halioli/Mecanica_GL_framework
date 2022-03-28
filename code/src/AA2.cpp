@@ -2,6 +2,8 @@
 #include "EulerIntegrator.h";
 #include "AA2.h"
 #include "Geometry.h"
+#include <imgui/imgui.h>
+
 
 namespace Planes
 {
@@ -20,6 +22,11 @@ namespace Sphere
 	CustomSphere customSphere(1.f, glm::vec3(0.f, 2.f, 0.f));
 }
 
+namespace LilSpheres {
+	extern const int maxParticles;
+	extern int firstParticleIdx, particleCount;
+	extern void updateParticles(int startIdx, int count, float* array_data);
+}
 //namespace Capsule 
 //{
 //	extern void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
@@ -112,6 +119,8 @@ void AA2::Update(float dt)
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
 	}
+
+	Sphere::customSphere.SphereMovement(renderSphere);
 }
 
 void AA2::RenderUpdate()
@@ -121,7 +130,64 @@ void AA2::RenderUpdate()
 	//Capsule::updateCapsule(capsuleA, capsuleB, capsuleRadius);
 }
 
-void AA2::RenderGui() {};
+void AA2::RenderGui() 
+{
+	ImGui::Checkbox("Show particles", &renderParticles);
+	ImGui::Checkbox("Show sphere", &renderSphere);
+	//guiCapsuleChanged |= ImGui::Checkbox("Show capsule", &renderCapsule);
+
+	if (!renderSphere)
+	{
+		Sphere::customSphere.sphereRadius = 0.f;
+	}
+
+
+	if (renderParticles) {
+		ImGui::SliderInt(
+			"First particle", //label
+			&LilSpheres::firstParticleIdx, // where the value exists
+			0, // min
+			numParticles // max
+		);
+		ImGui::DragInt(
+			"Number of particles", //label
+			&LilSpheres::particleCount, // where the value exists
+			1.f, // drag speed
+			0, // min
+			LilSpheres::maxParticles // max
+		);
+	}
+
+	if (renderSphere)
+	{
+		ImGui::InputFloat3(
+			"Sphere center",
+			&Sphere::customSphere.sphereCenter.x // pointer to an array of 3 floats
+		);
+
+		ImGui::InputFloat(
+			"Sphere Radius",
+			&Sphere::customSphere.sphereRadius
+		);
+
+		ImGui::RadioButton("Move left", &Sphere::customSphere.sphereMovement, Sphere::customSphere.LEFT);
+		ImGui::RadioButton("STOP", &Sphere::customSphere.sphereMovement, Sphere::customSphere.STOP);
+		ImGui::RadioButton("Move right", &Sphere::customSphere.sphereMovement, Sphere::customSphere.RIGHT);
+
+		if (ImGui::Button("Reset sphere")) {
+			Sphere::customSphere.sphereCenter = glm::vec3(0.f, 1.f, 0.f);
+		}
+
+		/*if (renderCapsule) {
+			guiCapsuleChanged |= ImGui::SliderFloat3(
+				"Capsule A",
+				&capsuleA.x,
+				-5.f,
+				10.f
+			);
+		}*/
+	}
+};
 
 #pragma endregion
 

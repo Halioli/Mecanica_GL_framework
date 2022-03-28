@@ -69,6 +69,7 @@ CustomSphere::CustomSphere(float radiusS, glm::vec3 centerS)
 {
     sphereRadius = radiusS;
     sphereCenter = centerS;
+    sphereMovement = STOP;
 }
 
 CustomSphere::~CustomSphere() 
@@ -83,7 +84,6 @@ bool CustomSphere::CheckCollisionSphere(glm::vec3 particlePos)
 
     return magnitudeVector <= sphereRadius;
 }
-
 
 glm::vec3* CustomSphere::CalculateParticleMirror(glm::vec3 previousPos, glm::vec3 currentPos, glm::vec3 currentVel)
 {
@@ -146,4 +146,18 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
     }
     return pointOfCollision;
 
+}
+
+void CustomSphere::SphereMovement(bool enable)
+{
+    if (enable) {
+        switch (sphereMovement) {
+        case LEFT:
+            sphereCenter.x -= 0.1f;
+            break;
+        case RIGHT:
+            sphereCenter.x += 0.1f;
+            break;
+        }
+    }
 }

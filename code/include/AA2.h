@@ -18,9 +18,10 @@ public:
 	void RenderUpdate();
 	void RenderGui();
 
+	int numParticles;
 private:
 	ParticleSystem* particles;
-	int numParticles;
+	
 
 
 	glm::vec3 capsuleA;

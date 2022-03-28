@@ -17,6 +17,7 @@ public:
     void CheckColision(glm::vec3 pointPos, glm::vec3 pointVel);
     glm::vec3* CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 currentVel);
 
+  
 private:
     Plane* plane;
 };
@@ -33,6 +34,15 @@ public:
 
     glm::vec3 sphereCenter;
     float sphereRadius;
+
+    void SphereMovement(bool enable);
+    int sphereMovement;
+
+    enum MOVEMENT {
+        LEFT,
+        RIGHT,
+        STOP
+    };
 
 private:
     CustomSphere* sphereC;
