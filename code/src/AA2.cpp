@@ -17,7 +17,7 @@ namespace Planes
 namespace Sphere
 {
 	extern void updateSphere(glm::vec3 pos, float radius = 1.f);
-	CustomSphere customSphere(1.f, glm::vec3(0.f, 4.f, 0.f));
+	CustomSphere customSphere(1.f, glm::vec3(0.f, 2.f, 0.f));
 }
 
 //namespace Capsule 

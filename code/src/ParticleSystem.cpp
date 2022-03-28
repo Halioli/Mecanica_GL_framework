@@ -21,7 +21,7 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 	startingVelocities = new glm::vec3[maxParticles];
 
 	currentLifespan = new float[maxParticles];
-	maxParticleLifetime = 50.f;
+	maxParticleLifetime = 80.f;
 
 	for (int i = 0; i < maxParticles; i++)
 	{
@@ -132,7 +132,7 @@ void ParticleSystem::IncrementCurrentLifespan(int particleId)
 
 void ParticleSystem::ResetParticle(int particleId)
 {
-	SetMirrorParticlePosition(particleId, startingPositions[particleId]);
-	SetMirrorParticleVelocity(particleId, startingPositions[particleId]);
+	SetParticlePosition(particleId, startingPositions[particleId]);
+	SetParticleVelocity(particleId, startingVelocities[particleId]);
 	currentLifespan[particleId] = 0.f;
 }

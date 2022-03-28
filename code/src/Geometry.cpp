@@ -20,7 +20,7 @@ float CalculatePlaneD(glm::vec3 normalVector, glm::vec3 planePoint)
     y = planePoint.y;
     z = planePoint.z;
 
-    D = -((A * x) + (B * y) + (C * z));
+    D = -(A * x) - (B * y) - (C * z);
 
     return D;
 }
@@ -90,14 +90,15 @@ glm::vec3* CustomSphere::CalculateParticleMirror(glm::vec3 previousPos, glm::vec
     glm::vec3 mirrorRes[2];
 
     glm::vec3 pointOfCollision = CalculatePointOfCollision(previousPos);
-    glm::vec3 normalVectorPlane = CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter);
+    glm::vec3 normalVectorPlane = glm::normalize(CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter));
+ 
     float planeD = CalculatePlaneD(normalVectorPlane, pointOfCollision);
 
     //Apply form: P = P' - 2(n * P' + D) * n
-    mirrorRes[0] = currentPos - 2.f * (normalVectorPlane * currentPos + planeD) * normalVectorPlane;
-
+    mirrorRes[0] = currentPos - (2.f * (normalVectorPlane * currentPos + planeD) * normalVectorPlane);
+    
     // Apply form: V = V' - 2(n * V') * n
-    mirrorRes[1] = currentVel - 2.f * (normalVectorPlane * currentVel) * normalVectorPlane;
+    mirrorRes[1] = glm::normalize(currentVel - (2.f * (normalVectorPlane * currentVel) * normalVectorPlane));
 
     return mirrorRes;
 }
@@ -108,7 +109,7 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
     float λRect[2];
 
     float a;
-    float b;
+    float b, b1, b2, b3;
     float c;
     glm::vec3 pointOfCollision;
 
@@ -123,7 +124,7 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
         pow(previousParticlePos.y - sphereCenter.y, 2) + 
         pow(previousParticlePos.z - sphereCenter.z, 2)) - pow(sphereRadius, 2);
 
-    b = (2 * previousParticlePos.x * vecRes.x) + 
+        b = (2 * previousParticlePos.x * vecRes.x) + 
         (2 * previousParticlePos.y * vecRes.y) + 
         (2 * previousParticlePos.z * vecRes.z);
 
@@ -131,17 +132,17 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
         pow(vecRes.y, 2) +
         pow(vecRes.z, 2);
 
-    λRect[0] = ( - (b) + sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
-    λRect[1] = ( - (b) - sqrt(pow(b, 2) - 4 * a * c)) / (2 * a);
+    λRect[0] = ( (-b) + sqrt(pow(b, 2.f) - (4.f * a * c))) / (2.f * a);
+    λRect[1] = ( (-b) - sqrt(pow(b, 2.f) - (4.f * a * c))) / (2.f * a);
 
 
     if (λRect[0] >= λRect[1])
     {
-       pointOfCollision = previousParticlePos + λRect[1] * vecRes;
+       pointOfCollision = previousParticlePos + (λRect[1] * vecRes);
     }
     else
     {
-        pointOfCollision = previousParticlePos + λRect[0] * vecRes;
+        pointOfCollision = previousParticlePos + (λRect[0] * vecRes);
     }
     return pointOfCollision;
 
