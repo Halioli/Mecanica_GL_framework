@@ -128,22 +128,22 @@ glm::vec3* CustomSphere::CalculateParticleMirror(glm::vec3 previousPos, glm::vec
 {
     glm::vec3 mirrorRes[2];
 
-    glm::vec3 pointOfCollision = CalculatePointOfCollision(previousPos);
+    glm::vec3 pointOfCollision = CalculatePointOfCollision(previousPos, currentPos);
     glm::vec3 normalVectorPlane = glm::normalize(CalculateVectorBetweenTwoPoints(pointOfCollision, sphereCenter));
  
     float planeD = CalculatePlaneD(normalVectorPlane, pointOfCollision);
 
     //Apply form: P = P' - 2(n * P' + D) * n
-    mirrorRes[0] = currentPos - (2.f * (normalVectorPlane * currentPos + planeD) * normalVectorPlane);
+    mirrorRes[0] = currentPos - (2.f * (glm::dot(normalVectorPlane, currentPos) + planeD) * normalVectorPlane);
     
     // Apply form: V = V' - 2(n * V') * n
-    mirrorRes[1] = glm::normalize(currentVel - (2.f * (normalVectorPlane * currentVel) * normalVectorPlane));
+    mirrorRes[1] = currentVel - (2.f * (glm::dot(normalVectorPlane, currentVel)) * normalVectorPlane);
 
     return mirrorRes;
 }
 
 //Aixo es crida a CalculateParticleMirror()
-glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos) 
+glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos, glm::vec3 currentParticlePos) 
 {
     float λRect[2];
 
@@ -152,9 +152,8 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
     float c;
     glm::vec3 pointOfCollision;
 
-    glm::vec3 vecRes = CalculateVectorBetweenTwoPoints(sphereCenter, previousParticlePos);
+    glm::vec3 vecRes = CalculateVectorBetweenTwoPoints(currentParticlePos, previousParticlePos);
 
-    
     //Ax + By + Cz + D = 0     
     //Pc = P + λV <--------------- Hem de trobar la lambda (ens donarà 2 res)
     // (x - Cx)^2 + (y - Cy)^2 + (z - Cz)^2 = r^2
@@ -163,9 +162,9 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
         pow(previousParticlePos.y - sphereCenter.y, 2) + 
         pow(previousParticlePos.z - sphereCenter.z, 2)) - pow(sphereRadius, 2);
 
-    b = (2 * previousParticlePos.x * vecRes.x) + 
-        (2 * previousParticlePos.y * vecRes.y) + 
-        (2 * previousParticlePos.z * vecRes.z);
+    b = (2 * previousParticlePos.x * vecRes.x) + (-2 * sphereCenter.x * vecRes.x) +
+        (2 * previousParticlePos.y * vecRes.y) + (-2 * sphereCenter.y * vecRes.y) +
+        (2 * previousParticlePos.z * vecRes.z) + (-2 * sphereCenter.z * vecRes.z);
 
     a = pow(vecRes.x, 2) +
         pow(vecRes.y, 2) +
@@ -183,6 +182,9 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
     {
         pointOfCollision = previousParticlePos + (λRect[0] * vecRes);
     }
+
+    std::printf("distance %f\n", glm::distance(pointOfCollision, sphereCenter));
+
     return pointOfCollision;
 
 }

@@ -35,7 +35,7 @@ public:
 
     bool CheckCollisionSphere(glm::vec3 particlePos);
     glm::vec3* CalculateParticleMirror(glm::vec3 previousPos, glm::vec3 currentPos, glm::vec3 currentVel);
-    glm::vec3 CalculatePointOfCollision(glm::vec3 particlePos);
+    glm::vec3 CalculatePointOfCollision(glm::vec3 particlePos, glm::vec3 currentParticlePos);
 
     glm::vec3 sphereCenter;
     float sphereRadius;

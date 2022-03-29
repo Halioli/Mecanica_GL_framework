@@ -3,6 +3,7 @@
 #include "AA2.h"
 #include "Geometry.h"
 #include <imgui/imgui.h>
+#include <time.h>
 
 
 namespace Planes
@@ -62,12 +63,15 @@ bool CheckHasTravessedFloorAA2(glm::vec3 particle)
 #pragma region class
 AA2::AA2()
 {
+	srand(time(NULL));
 	numParticles = 40;
 	particles = new ParticleSystem(numParticles);
 
 	for (int i = 0; i < numParticles; i++)
 	{
 		particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
+		/*particles->CascadeMode(i);
+		particles->FountainMode(i);*/
 	}
 
 	capsuleA = glm::vec3(2.f, 3.f, 0.f);
@@ -103,6 +107,8 @@ void AA2::Update(float dt)
 		if (particles->CheckParticleLifespan(i))
 		{
 			particles->ResetParticle(i);
+			//particles->ResetParticleCascade(i);
+			//particles->ResetParticle(i);
 		}
 
 		// Check if a particle travessed the floor plane. Restart its position if it had

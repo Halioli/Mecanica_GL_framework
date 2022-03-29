@@ -1,4 +1,6 @@
 #include "ParticleSystem.h"
+#include <random>
+#include <algorithm>
 
 /////////Forward declarations
 namespace LilSpheres
@@ -36,6 +38,11 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 	currentLifespan = new float[maxParticles];
 	maxParticleLifetime = 80.f;
 
+	cascadeStartingPoint = glm::vec3(-5.f, 0.f, -5.f);
+	cascadeEndingPoint = glm::vec3(5.f, 1.f, 5.f);
+	cascadeRotationAngle = 30.f;
+	cascadeStartingVelocity = glm::vec3 (0.f, 5.f, 5.f);
+	
 	for (int i = 0; i < maxParticles; i++)
 	{
 		currentPositions[i] = glm::vec3(0.f, 0.f, 0.f);
@@ -155,7 +162,63 @@ void ParticleSystem::ResetParticle(int particleId)
 	currentLifespan[particleId] = 0.f;
 }
 
+void ParticleSystem::ResetParticleCascade(int particleId)
+{
+	CascadeMode(particleId);
+	currentLifespan[particleId] = 0.f;
+}
+
+void ParticleSystem::ResetParticleFountain(int particleId)
+{
+	FountainMode(particleId);
+	currentLifespan[particleId] = 0.f;
+}
+
 void ParticleSystem::SetNumParticles(int newVal)
 {
 	currentNumParticles = newVal;
+}
+
+void ParticleSystem::CascadeMode(int particleId)
+{
+	float sinVel;
+	float cosVel;
+
+	glm::vec3 ABVector = cascadeEndingPoint - cascadeStartingPoint;
+
+	currentPositions[particleId].x = rand() % (int)ABVector.x;
+	currentPositions[particleId].y = rand() % (int)ABVector.y;
+	currentPositions[particleId].z = rand() % (int)ABVector.z;
+	
+
+	cascadeStartingVelocityMag = sqrt(pow(cascadeStartingVelocity.x, 2) + 
+									pow(cascadeStartingVelocity.y, 2) + 
+									pow(cascadeStartingVelocity.z, 2));
+
+	sinVel = glm::sin(cascadeRotationAngle) * cascadeStartingVelocityMag;
+	cosVel = glm::cos(cascadeRotationAngle) * cascadeStartingVelocityMag;
+	
+	currentVelocities[particleId].x += cosVel;
+	currentVelocities[particleId].y += sinVel;
+
+	SetStartingValues();
+}
+
+void ParticleSystem::SetStartingValues()
+{
+	startingPositions = currentPositions;
+	startingVelocities = currentVelocities;
+}
+
+void ParticleSystem::FountainMode(int particleId) 
+{
+	startingPositions[particleId] = fountainPosition; 
+
+	fountainStartingVelocity.x = rand() % fountainAngle;
+	fountainStartingVelocity.y = rand() % fountainAngle;
+	fountainStartingVelocity.z = rand() % fountainAngle;
+	
+	currentVelocities[particleId] = fountainStartingVelocity;
+
+	SetStartingValues();
 }

@@ -27,7 +27,12 @@ public:
 	void IncrementCurrentLifespan(int particleId);
 	void SetMaxLifetime(int newVal);
 	void ResetParticle(int particleId);
+	void ResetParticleCascade(int particleId);
 	void SetNumParticles(int newVal);
+	void CascadeMode(int particleId);
+	void SetStartingValues();
+	void FountainMode(int particleId);
+	void ResetParticleFountain(int particleId);
 
 private:
 	int currentNumParticles;
@@ -40,6 +45,20 @@ private:
 
 	glm::vec3* startingPositions;
 	glm::vec3* startingVelocities;
+
+	glm::vec3 cascadeStartingPoint;
+	glm::vec3 cascadeEndingPoint;
+	glm::vec3 cascadeStartingVelocity;
+	int cascadeRotationAngle;
+	float cascadeStartingVelocityMag;
+
+	glm::vec3 fountainDirection;
+	glm::vec3 fountainPosition;
+	int fountainAngle;
+	glm::vec3 fountainStartingVelocity;
+	float fountainStartingVelocityMag;
+	
+	
 
 	float* currentLifespan;
 	float maxParticleLifetime;
