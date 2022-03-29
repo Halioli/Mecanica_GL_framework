@@ -25,6 +25,8 @@ glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles)
 }
 ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 {
+	particleMode = CASCADE;
+
 	currentNumParticles = maxParticles;
 	currentPositions = new glm::vec3[maxParticles];
 	currentVelocities = new glm::vec3[maxParticles];
@@ -40,7 +42,7 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 
 	cascadeStartingPoint = glm::vec3(-5.f, 0.f, -5.f);
 	cascadeEndingPoint = glm::vec3(5.f, 1.f, 5.f);
-	cascadeRotationAngle = 30.f;
+	cascadeRotationAngle = 10.f;
 	cascadeStartingVelocity = glm::vec3 (0.f, 5.f, 5.f);
 	
 	for (int i = 0; i < maxParticles; i++)
@@ -186,11 +188,13 @@ void ParticleSystem::CascadeMode(int particleId)
 
 	glm::vec3 ABVector = cascadeEndingPoint - cascadeStartingPoint;
 
-	currentPositions[particleId].x = rand() % (int)ABVector.x;
-	currentPositions[particleId].y = rand() % (int)ABVector.y;
-	currentPositions[particleId].z = rand() % (int)ABVector.z;
-	
+	int randomPositionPerCent = rand() % 100;
 
+	currentPositions[particleId].x = (ABVector.x * randomPositionPerCent)/100;
+	currentPositions[particleId].y = (ABVector.y * randomPositionPerCent) / 100;
+	currentPositions[particleId].z = (ABVector.z * randomPositionPerCent) / 100;
+
+	
 	cascadeStartingVelocityMag = sqrt(pow(cascadeStartingVelocity.x, 2) + 
 									pow(cascadeStartingVelocity.y, 2) + 
 									pow(cascadeStartingVelocity.z, 2));
@@ -214,9 +218,9 @@ void ParticleSystem::FountainMode(int particleId)
 {
 	startingPositions[particleId] = fountainPosition; 
 
-	fountainStartingVelocity.x = rand() % fountainAngle;
+	/*fountainStartingVelocity.x = rand() % fountainAngle;
 	fountainStartingVelocity.y = rand() % fountainAngle;
-	fountainStartingVelocity.z = rand() % fountainAngle;
+	fountainStartingVelocity.z = rand() % fountainAngle;*/
 	
 	currentVelocities[particleId] = fountainStartingVelocity;
 

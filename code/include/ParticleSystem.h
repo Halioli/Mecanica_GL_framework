@@ -34,6 +34,17 @@ public:
 	void FountainMode(int particleId);
 	void ResetParticleFountain(int particleId);
 
+	enum ParticleMode {
+		NORMAL,
+		CASCADE,
+		FOUNTAIN,
+	};
+
+	int particleMode;
+
+	glm::vec3 cascadeStartingPoint;
+	glm::vec3 cascadeEndingPoint;
+
 private:
 	int currentNumParticles;
 	int maxParticles;
@@ -46,8 +57,7 @@ private:
 	glm::vec3* startingPositions;
 	glm::vec3* startingVelocities;
 
-	glm::vec3 cascadeStartingPoint;
-	glm::vec3 cascadeEndingPoint;
+	
 	glm::vec3 cascadeStartingVelocity;
 	int cascadeRotationAngle;
 	float cascadeStartingVelocityMag;
@@ -58,8 +68,6 @@ private:
 	glm::vec3 fountainStartingVelocity;
 	float fountainStartingVelocityMag;
 	
-	
-
 	float* currentLifespan;
 	float maxParticleLifetime;
 };

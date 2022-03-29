@@ -37,7 +37,18 @@ namespace LilSpheres
 	extern int particleCount;
 	extern int maxLifetime = 40;
 	extern void updateParticles(int startIdx, int count, float* array_data);
+
+	extern enum ParticleMode {
+		NORMAL,
+		CASCADE,
+		FOUNTAIN
+	};
+
+	//No ho agafa
+	/*extern glm::vec3 cascadeStartingPoint;
+	extern glm::vec3 cascadeEndingPoint;*/
 }
+
 int particleNum = 40;
 
 extern glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles);
@@ -69,9 +80,19 @@ AA2::AA2()
 
 	for (int i = 0; i < numParticles; i++)
 	{
-		particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
-		/*particles->CascadeMode(i);
-		particles->FountainMode(i);*/
+		switch (particles->particleMode) {
+			case LilSpheres::NORMAL:
+				particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
+				break;
+			case LilSpheres::CASCADE:
+				particles->CascadeMode(i);
+			case LilSpheres::FOUNTAIN:
+				particles->FountainMode(i);
+				break;
+			default:
+				particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
+				break;
+		}
 	}
 
 	capsuleA = glm::vec3(2.f, 3.f, 0.f);
@@ -106,9 +127,23 @@ void AA2::Update(float dt)
 		particles->IncrementCurrentLifespan(i);
 		if (particles->CheckParticleLifespan(i))
 		{
-			particles->ResetParticle(i);
-			//particles->ResetParticleCascade(i);
-			//particles->ResetParticle(i);
+			switch (particles->particleMode) {
+			case LilSpheres::NORMAL:
+				particles->ResetParticle(i);
+				std::printf("Mode: NORMAL");
+				break;
+			case LilSpheres::CASCADE:
+				particles->ResetParticleCascade(i);
+				std::printf("Mode: Cascade");
+				break;
+			case LilSpheres::FOUNTAIN:
+				particles->ResetParticle(i);
+				std::printf("Mode: Fountain");
+				break;
+			default:
+				particles->ResetParticle(i);
+				break;
+			}
 		}
 
 		// Check if a particle travessed the floor plane. Restart its position if it had
@@ -219,6 +254,25 @@ void AA2::RenderGui()
 			0, // min
 			360 // max
 		);
+
+
+		//No funciona bé
+		ImGui::RadioButton("Normal", &particles->particleMode, LilSpheres::NORMAL);
+		ImGui::RadioButton("Cascade", &particles->particleMode, LilSpheres::CASCADE);
+		ImGui::RadioButton("Fountain", &particles->particleMode, LilSpheres::FOUNTAIN);
+
+
+
+
+		/*ImGui::InputFloat3(
+			"Segment A",
+			&LilSpheres::cascadeStartingPoint.x
+		);
+
+		ImGui::InputFloat3(
+			"Segment B",
+			&LilSpheres::cascadeEndingPoint.x
+		);*/
 	}
 
 	if (renderSphere)
