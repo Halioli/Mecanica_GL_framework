@@ -25,9 +25,12 @@ public:
 	float GetCurrentLifespan(int particleId);
 	bool CheckParticleLifespan(int particleId);
 	void IncrementCurrentLifespan(int particleId);
+	void SetMaxLifetime(int newVal);
 	void ResetParticle(int particleId);
+	void SetNumParticles(int newVal);
 
 private:
+	int currentNumParticles;
 	int maxParticles;
 	glm::vec3* currentPositions;
 	glm::vec3* currentVelocities;

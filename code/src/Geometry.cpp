@@ -109,7 +109,7 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
     float λRect[2];
 
     float a;
-    float b, b1, b2, b3;
+    float b;
     float c;
     glm::vec3 pointOfCollision;
 
@@ -124,7 +124,7 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos)
         pow(previousParticlePos.y - sphereCenter.y, 2) + 
         pow(previousParticlePos.z - sphereCenter.z, 2)) - pow(sphereRadius, 2);
 
-        b = (2 * previousParticlePos.x * vecRes.x) + 
+    b = (2 * previousParticlePos.x * vecRes.x) + 
         (2 * previousParticlePos.y * vecRes.y) + 
         (2 * previousParticlePos.z * vecRes.z);
 

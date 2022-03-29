@@ -11,6 +11,7 @@ namespace LilSpheres
 
 ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 {
+	currentNumParticles = maxParticles;
 	currentPositions = new glm::vec3[maxParticles];
 	currentVelocities = new glm::vec3[maxParticles];
 
@@ -52,7 +53,7 @@ ParticleSystem::~ParticleSystem()
 
 int ParticleSystem::GetNumberOfParticles()
 {
-	return maxParticles;
+	return currentNumParticles;
 };
 
 void ParticleSystem::Render()
@@ -130,9 +131,19 @@ void ParticleSystem::IncrementCurrentLifespan(int particleId)
 	++currentLifespan[particleId];
 }
 
+void ParticleSystem::SetMaxLifetime(int newVal)
+{
+	maxParticleLifetime = newVal;
+}
+
 void ParticleSystem::ResetParticle(int particleId)
 {
 	SetParticlePosition(particleId, startingPositions[particleId]);
 	SetParticleVelocity(particleId, startingVelocities[particleId]);
 	currentLifespan[particleId] = 0.f;
+}
+
+void ParticleSystem::SetNumParticles(int newVal)
+{
+	currentNumParticles = newVal;
 }

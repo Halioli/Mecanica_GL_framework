@@ -22,15 +22,20 @@ namespace Sphere
 	CustomSphere customSphere(1.f, glm::vec3(0.f, 2.f, 0.f));
 }
 
-namespace LilSpheres {
+namespace Capsule 
+{
+	extern void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
+}
+
+namespace LilSpheres 
+{
 	extern const int maxParticles;
-	extern int firstParticleIdx, particleCount;
+	extern int firstParticleIdx;
+	extern int particleCount;
+	extern int maxLifetime = 40;
 	extern void updateParticles(int startIdx, int count, float* array_data);
 }
-//namespace Capsule 
-//{
-//	extern void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
-//}
+int particleNum = 40;
 
 // Auxiliar methods
 #pragma region auxiliar
@@ -51,7 +56,7 @@ bool CheckHasTravessedFloorAA2(glm::vec3 particle)
 {
 	// This should be done with:
 	// (n * p + d) * (n * p' + d) * n
-	if (particle[1] <= 0.0f)
+	if (particle.y <= 0.0f)
 	{
 		return true;
 	}
@@ -72,9 +77,9 @@ AA2::AA2()
 		particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
 	}
 
-	/*capsuleA = glm::vec3(2.f, 3.f, 0.f);
+	capsuleA = glm::vec3(2.f, 3.f, 0.f);
 	capsuleB = glm::vec3(4.f, 4.f, 0.f);
-	capsuleRadius = 1.f;*/
+	capsuleRadius = 1.f;
 
 	// Enable the rendering of particles in the framework 
 	extern bool renderParticles; renderParticles = true;
@@ -96,7 +101,9 @@ void AA2::Update(float dt)
 
 	eulerInt.Step(particles, dt);
 
-	// Check if a particle travessed the floor plane. Restart its position if it had
+	particles->SetMaxLifetime(LilSpheres::maxLifetime);
+	particles->SetNumParticles(particleNum);
+
 	for (int i = 0; i < numParticles; i++)
 	{
 		particles->IncrementCurrentLifespan(i);
@@ -105,6 +112,7 @@ void AA2::Update(float dt)
 			particles->ResetParticle(i);
 		}
 
+		// Check if a particle travessed the floor plane. Restart its position if it had
 		if (CheckHasTravessedFloorAA2(particles->GetCurrentParticlePosition(i)))
 		{
 			particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
@@ -127,14 +135,14 @@ void AA2::RenderUpdate()
 {
 	particles->Render();
 	Sphere::updateSphere(Sphere::customSphere.sphereCenter, Sphere::customSphere.sphereRadius);
-	//Capsule::updateCapsule(capsuleA, capsuleB, capsuleRadius);
+	Capsule::updateCapsule(capsuleA, capsuleB, capsuleRadius);
 }
 
 void AA2::RenderGui() 
 {
 	ImGui::Checkbox("Show particles", &renderParticles);
 	ImGui::Checkbox("Show sphere", &renderSphere);
-	//guiCapsuleChanged |= ImGui::Checkbox("Show capsule", &renderCapsule);
+	ImGui::Checkbox("Show capsule", &renderCapsule);
 
 	if (!renderSphere)
 	{
@@ -142,19 +150,20 @@ void AA2::RenderGui()
 	}
 
 
-	if (renderParticles) {
+	if (renderParticles) 
+	{
 		ImGui::SliderInt(
-			"First particle", //label
-			&LilSpheres::firstParticleIdx, // where the value exists
-			0, // min
-			numParticles // max
-		);
-		ImGui::DragInt(
 			"Number of particles", //label
-			&LilSpheres::particleCount, // where the value exists
-			1.f, // drag speed
+			&particleNum, // where the value exists
 			0, // min
-			LilSpheres::maxParticles // max
+			40 // max
+		);
+
+		ImGui::SliderInt(
+			"Particle lifetime", //label
+			&LilSpheres::maxLifetime, // where the value exists
+			0, // min
+			100 // max
 		);
 	}
 
@@ -174,18 +183,20 @@ void AA2::RenderGui()
 		ImGui::RadioButton("STOP", &Sphere::customSphere.sphereMovement, Sphere::customSphere.STOP);
 		ImGui::RadioButton("Move right", &Sphere::customSphere.sphereMovement, Sphere::customSphere.RIGHT);
 
-		if (ImGui::Button("Reset sphere")) {
+		if (ImGui::Button("Reset sphere")) 
+		{
 			Sphere::customSphere.sphereCenter = glm::vec3(0.f, 1.f, 0.f);
 		}
 
-		/*if (renderCapsule) {
-			guiCapsuleChanged |= ImGui::SliderFloat3(
+		if (renderCapsule) 
+		{
+			ImGui::SliderFloat3(
 				"Capsule A",
 				&capsuleA.x,
 				-5.f,
 				10.f
 			);
-		}*/
+		}
 	}
 };
 

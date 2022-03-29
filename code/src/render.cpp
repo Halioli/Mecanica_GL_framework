@@ -728,62 +728,71 @@ namespace Capsule
 
 ////////////////////////////////////////////////// PARTICLES
 // Same rendering as Sphere (reusing shaders)
-namespace LilSpheres {
-GLuint particlesVao;
-GLuint particlesVbo;
-float radius;
-int numparticles;
-extern const int maxParticles = SHRT_MAX;
+namespace LilSpheres 
+{
+	GLuint particlesVao;
+	GLuint particlesVbo;
+	float radius;
+	int numparticles;
+	extern const int maxParticles = SHRT_MAX;
 
-void setupParticles(int numTotalParticles, float radius) {
-	assert(numTotalParticles > 0);
-	assert(numTotalParticles <= SHRT_MAX);
-	numparticles = numTotalParticles;
-	LilSpheres::radius = radius;
+	void setupParticles(int numTotalParticles, float radius) 
+	{
+		assert(numTotalParticles > 0);
+		assert(numTotalParticles <= SHRT_MAX);
+		numparticles = numTotalParticles;
+		LilSpheres::radius = radius;
 	
-	glGenVertexArrays(1, &particlesVao);
-	glBindVertexArray(particlesVao);
-	glGenBuffers(1, &particlesVbo);
+		glGenVertexArrays(1, &particlesVao);
+		glBindVertexArray(particlesVao);
+		glGenBuffers(1, &particlesVbo);
 
-	glBindBuffer(GL_ARRAY_BUFFER, particlesVbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * numparticles, 0, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, particlesVbo);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 3 * numparticles, 0, GL_DYNAMIC_DRAW);
+		glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(0);
 
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	Sphere::createSphereShaderAndProgram();
-}
-void cleanupParticles() {
-	glDeleteVertexArrays(1, &particlesVao);
-	glDeleteBuffers(1, &particlesVbo);
-
-	Sphere::cleanupSphereShaderAndProgram();
-}
-void updateParticles(int startIdx, int count, float* array_data) {
-	glBindBuffer(GL_ARRAY_BUFFER, particlesVbo);
-	float* buff = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	buff = &buff[3*startIdx];
-	for(int i = 0; i < 3*count; ++i) {
-		buff[i] = array_data[i];
+		Sphere::createSphereShaderAndProgram();
 	}
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-void drawParticles(int startIdx, int count) {
-	glBindVertexArray(particlesVao);
-	glUseProgram(Sphere::sphereProgram);
-	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
-	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "mv_Mat"), 1, GL_FALSE, glm::value_ptr(RV::_modelView));
-	glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(RV::_projection));
-	glUniform4f(glGetUniformLocation(Sphere::sphereProgram, "color"), 0.1f, 0.1f, 0.6f, 1.f);
-	glUniform1f(glGetUniformLocation(Sphere::sphereProgram, "radius"), LilSpheres::radius);
-	glDrawArrays(GL_POINTS, startIdx, count);
 
-	glUseProgram(0);
-	glBindVertexArray(0);
-}
+	void cleanupParticles() 
+	{
+		glDeleteVertexArrays(1, &particlesVao);
+		glDeleteBuffers(1, &particlesVbo);
+
+		Sphere::cleanupSphereShaderAndProgram();
+	}
+
+	void updateParticles(int startIdx, int count, float* array_data) 
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, particlesVbo);
+		float* buff = (float*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		buff = &buff[3*startIdx];
+		for(int i = 0; i < 3*count; ++i) 
+		{
+			buff[i] = array_data[i];
+		}
+		glUnmapBuffer(GL_ARRAY_BUFFER);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void drawParticles(int startIdx, int count) 
+	{
+		glBindVertexArray(particlesVao);
+		glUseProgram(Sphere::sphereProgram);
+		glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "mvpMat"), 1, GL_FALSE, glm::value_ptr(RV::_MVP));
+		glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "mv_Mat"), 1, GL_FALSE, glm::value_ptr(RV::_modelView));
+		glUniformMatrix4fv(glGetUniformLocation(Sphere::sphereProgram, "projMat"), 1, GL_FALSE, glm::value_ptr(RV::_projection));
+		glUniform4f(glGetUniformLocation(Sphere::sphereProgram, "color"), 0.1f, 0.1f, 0.6f, 1.f);
+		glUniform1f(glGetUniformLocation(Sphere::sphereProgram, "radius"), LilSpheres::radius);
+		glDrawArrays(GL_POINTS, startIdx, count);
+
+		glUseProgram(0);
+		glBindVertexArray(0);
+	}
 }
 
 ////////////////////////////////////////////////// CLOTH
