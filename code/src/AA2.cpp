@@ -13,8 +13,8 @@ namespace Planes
 
 	Plane leftPlane(glm::vec3(-5.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
 	Plane rightPlane(glm::vec3(5.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
-	Plane frontPlane(glm::vec3(), glm::vec3(), 0.f);
-	Plane backPlane(glm::vec3(), glm::vec3(), 0.f);
+	Plane frontPlane(glm::vec3(0.f, 0.f, 5.f), glm::vec3(0.f, 0.f, 1.f));
+	Plane backPlane(glm::vec3(0.f, 0.f, -5.f), glm::vec3(0.f, 0.f, 1.f));
 
 }
 
@@ -146,6 +146,23 @@ void AA2::Update(float dt)
 			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
+		if (Planes::frontPlane.CheckFrontColision(particles->GetCurrentParticlePosition(i)))
+		{
+			mirrorRes = Planes::frontPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+				particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+		}
+
+		if (Planes::backPlane.CheckBackColision(particles->GetCurrentParticlePosition(i)))
+		{
+			mirrorRes = Planes::backPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+				particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+		}
 
 		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
 		{
@@ -155,6 +172,8 @@ void AA2::Update(float dt)
 			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
+
+
 	}
 
 	Sphere::customSphere.SphereMovement(renderSphere);

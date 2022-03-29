@@ -18,6 +18,8 @@ public:
     bool CheckTopColision(glm::vec3 particlePos);
     bool CheckLeftColision(glm::vec3 particlePos);
     bool CheckRightColision(glm::vec3 particlePos);
+    bool CheckFrontColision(glm::vec3 particlePos);
+    bool CheckBackColision(glm::vec3 particlePos);
 
     glm::vec3* CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 currentVel);
   

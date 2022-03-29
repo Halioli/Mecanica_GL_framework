@@ -71,23 +71,23 @@ bool Plane::CheckRightColision(glm::vec3 particlePos)
     }
     return false;
 }
-//bool Plane::CheckFrontColision(glm::vec3 particlePos)
-//{
-//    if (particlePos.z <= planePoint.z)
-//    {
-//        return true;
-//    }
-//    return false;
-//}
-//
-//bool Plane::CheckBackColision(glm::vec3 particlePos)
-//{
-//    if (particlePos.z <= planePoint.z)
-//    {
-//        return true;
-//    }
-//    return false;
-//}
+bool Plane::CheckFrontColision(glm::vec3 particlePos)
+{
+    if (particlePos.z >= planePoint.z)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Plane::CheckBackColision(glm::vec3 particlePos)
+{
+    if (particlePos.z <= planePoint.z)
+    {
+        return true;
+    }
+    return false;
+}
 
 glm::vec3* Plane::CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 currentVel)
 {
