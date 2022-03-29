@@ -25,11 +25,10 @@ float CalculatePlaneD(glm::vec3 normalVector, glm::vec3 planePoint)
     return D;
 }
 
-Plane::Plane(glm::vec3 point, glm::vec3 normal, float d)
+Plane::Plane(glm::vec3 point, glm::vec3 normal)
 {
     planePoint = point;
     planeNormal = normal;
-    planeD = d;
 }
 
 Plane::~Plane()
@@ -37,23 +36,63 @@ Plane::~Plane()
 
 }
 
-void Plane::CheckColision(glm::vec3 pointPos, glm::vec3 pointVel)
+bool Plane::CheckBottomColision(glm::vec3 particlePos)
 {
-    if (pointPos.z <= planePoint.z)
+    if (particlePos.y <= planePoint.y)
     {
-        // Colision happened
-        glm::vec3 vector = { pointPos.x - planePoint.x, pointPos.y - planePoint.y, pointPos.z - planePoint.z };
-
-        float result = pow(vector.x, 2) + pow(vector.y, 2) + pow(vector.z, 2);
-        float vectorModule = sqrt(result);
-
-        //planeNormal.x * pointPos.x + planeNormal.y * pointPos.y + planeNormal.z * pointPos.z + D = 0
-        float dValue = -(pointPos.x * planeNormal.x + pointPos.y * planeNormal.y + pointPos.z * planeNormal.z);
+        return true;
     }
+    return false;
 }
+
+bool Plane::CheckTopColision(glm::vec3 particlePos) 
+{
+    if (particlePos.y >= planePoint.y)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Plane::CheckLeftColision(glm::vec3 particlePos)
+{
+    if (particlePos.x <= planePoint.x)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Plane::CheckRightColision(glm::vec3 particlePos)
+{
+    if (particlePos.x >= planePoint.x)
+    {
+        return true;
+    }
+    return false;
+}
+//bool Plane::CheckFrontColision(glm::vec3 particlePos)
+//{
+//    if (particlePos.z <= planePoint.z)
+//    {
+//        return true;
+//    }
+//    return false;
+//}
+//
+//bool Plane::CheckBackColision(glm::vec3 particlePos)
+//{
+//    if (particlePos.z <= planePoint.z)
+//    {
+//        return true;
+//    }
+//    return false;
+//}
 
 glm::vec3* Plane::CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 currentVel)
 {
+    float planeD = CalculatePlaneD(glm::normalize(planeNormal), planePoint);
+
     glm::vec3 mirrorRes[2];
 
     // == Mirror ==

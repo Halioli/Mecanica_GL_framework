@@ -7,13 +7,15 @@
 
 namespace Planes
 {
-	Plane bottomPlane(glm::vec3(1.f, 0.f, 1.f), glm::vec3(), 1.f);
+	Plane bottomPlane(glm::vec3(1.f, 0.f, 1.f), glm::vec3(0.f, -1.f, 0.f));
 
-	Plane topPlane(glm::vec3(), glm::vec3(), 0.f);
-	Plane leftPlane(glm::vec3(), glm::vec3(), 0.f);
-	Plane rightlane(glm::vec3(), glm::vec3(), 0.f);
+	Plane topPlane(glm::vec3(0.f, 10.f, 0.f), glm::vec3(0.f, -1.f, 0.f));
+
+	Plane leftPlane(glm::vec3(-5.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
+	Plane rightPlane(glm::vec3(5.f, 0.f, 0.f), glm::vec3(1.f, 0.f, 0.f));
 	Plane frontPlane(glm::vec3(), glm::vec3(), 0.f);
 	Plane backPlane(glm::vec3(), glm::vec3(), 0.f);
+
 }
 
 namespace Sphere
@@ -37,20 +39,11 @@ namespace LilSpheres
 }
 int particleNum = 40;
 
+extern glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles);
+
 // Auxiliar methods
 #pragma region auxiliar
-glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles)
-{
-	float margin = 0.1f;
-	float available_length = 2 * (5.f - margin);
-	float offset = available_length / (numParticles - 1);
 
-	float x, y, z;
-	x = z = -5.f + margin + id * offset;
-	y = 9.9f;
-
-	return glm::vec3(x, y, z);
-}
 
 bool CheckHasTravessedFloorAA2(glm::vec3 particle)
 {
@@ -113,9 +106,45 @@ void AA2::Update(float dt)
 		}
 
 		// Check if a particle travessed the floor plane. Restart its position if it had
-		if (CheckHasTravessedFloorAA2(particles->GetCurrentParticlePosition(i)))
+		/*if (CheckHasTravessedFloorAA2(particles->GetCurrentParticlePosition(i)))
 		{
 			particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
+		}*/
+
+		if (Planes::bottomPlane.CheckBottomColision(particles->GetCurrentParticlePosition(i)))
+		{
+			mirrorRes = Planes::bottomPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i), 
+																	particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+		}
+		
+		if (Planes::topPlane.CheckTopColision(particles->GetCurrentParticlePosition(i)))
+		{
+			mirrorRes = Planes::topPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i), 
+																	particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+		}
+
+		if (Planes::leftPlane.CheckLeftColision(particles->GetCurrentParticlePosition(i)))
+		{
+			mirrorRes = Planes::leftPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+				particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+		}
+
+		if (Planes::rightPlane.CheckRightColision(particles->GetCurrentParticlePosition(i)))
+		{
+			mirrorRes = Planes::rightPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+				particles->GetCurrentParticleVelocity(i));
+
+			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
 
 		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
@@ -163,7 +192,7 @@ void AA2::RenderGui()
 			"Particle lifetime", //label
 			&LilSpheres::maxLifetime, // where the value exists
 			0, // min
-			100 // max
+			360 // max
 		);
 	}
 

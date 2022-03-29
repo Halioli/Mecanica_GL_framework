@@ -9,6 +9,18 @@ namespace LilSpheres
 	extern void updateParticles(int startIdx, int count, float* array_data);
 }
 
+glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles)
+{
+	float margin = 0.1f;
+	float available_length = 2 * (5.f - margin);
+	float offset = available_length / (numParticles - 1);
+
+	float x, y, z;
+	x = z = -5.f + margin + id * offset;
+	y = 9.9f;
+
+	return glm::vec3(x, y, z);
+}
 ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 {
 	currentNumParticles = maxParticles;
@@ -138,7 +150,7 @@ void ParticleSystem::SetMaxLifetime(int newVal)
 
 void ParticleSystem::ResetParticle(int particleId)
 {
-	SetParticlePosition(particleId, startingPositions[particleId]);
+	SetParticlePosition(particleId, GetParticleInitialPositionAA2(particleId, currentNumParticles));
 	SetParticleVelocity(particleId, startingVelocities[particleId]);
 	currentLifespan[particleId] = 0.f;
 }
