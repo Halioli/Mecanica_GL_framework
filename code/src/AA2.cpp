@@ -45,8 +45,8 @@ namespace LilSpheres
 	};
 
 	//No ho agafa
-	/*extern glm::vec3 cascadeStartingPoint;
-	extern glm::vec3 cascadeEndingPoint;*/
+	glm::vec3 cascadeStartingPoint = glm::vec3(2.f, 2.f, -4.f);
+	glm::vec3 cascadeEndingPoint = glm::vec3(2.f, 2.f, 2.f);
 }
 
 int particleNum = 40;
@@ -107,6 +107,7 @@ void AA2::Update(float dt)
 
 	particles->SetMaxLifetime(LilSpheres::maxLifetime);
 	particles->SetNumParticles(particleNum);
+	particles->SetCascadePoints(LilSpheres::cascadeStartingPoint, LilSpheres::cascadeEndingPoint);
 
 	for (int i = 0; i < numParticles; i++)
 	{
@@ -236,12 +237,11 @@ void AA2::RenderGui()
 			360 // max
 		);
 
-		//No funciona bé
 		ImGui::RadioButton("Normal", &particles->particleMode, LilSpheres::NORMAL);
 		ImGui::RadioButton("Cascade", &particles->particleMode, LilSpheres::CASCADE);
 		ImGui::RadioButton("Fountain", &particles->particleMode, LilSpheres::FOUNTAIN);
 
-		/*ImGui::InputFloat3(
+		ImGui::InputFloat3(
 			"Segment A",
 			&LilSpheres::cascadeStartingPoint.x
 		);
@@ -249,7 +249,7 @@ void AA2::RenderGui()
 		ImGui::InputFloat3(
 			"Segment B",
 			&LilSpheres::cascadeEndingPoint.x
-		);*/
+		);
 	}
 
 	if (renderSphere)

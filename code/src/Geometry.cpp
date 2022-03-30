@@ -4,6 +4,18 @@ glm::vec3 CalculateVectorBetweenTwoPoints(glm::vec3 firstP, glm::vec3 secondP) {
     return firstP - secondP;
 }
 
+glm::vec3 CalculatePerpendicularVector(glm::vec3 vector, float Px, float Py)
+{
+    //vector · newVector = 0
+     //vx * nx + vy * ny + vz * nz = 0
+    glm::vec3 newVector;
+    float Pz;
+
+    Pz = ((vector.x * Px) + (vector.y * Py)) / vector.z;
+
+    return newVector = glm::vec3(Px, Py, Pz);
+}
+
 float CalculatePlaneD(glm::vec3 normalVector, glm::vec3 planePoint)
 {
     //Components of plane's normal vector

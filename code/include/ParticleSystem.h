@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm\glm.hpp>
+#include "Geometry.h"
 
 class ParticleSystem {
 public:
@@ -34,6 +35,7 @@ public:
 	void FountainMode(int particleId);
 	void ResetParticleFountain(int particleId);
 
+	void SetCascadePoints(glm::vec3 startingP, glm::vec3 endingP);
 	enum ParticleMode {
 		NORMAL,
 		CASCADE,

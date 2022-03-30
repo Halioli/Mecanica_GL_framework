@@ -2,6 +2,21 @@
 #include <random>
 #include <algorithm>
 
+glm::vec3 CalculateVectorBetweenTwoPointsP(glm::vec3 firstP, glm::vec3 secondP) {
+	return firstP - secondP;
+}
+
+glm::vec3 CalculatePerpendicularVectorP(glm::vec3 vector, float Px, float Py)
+{
+	//vector · newVector = 0
+	 //vx * nx + vy * ny + vz * nz = 0
+	glm::vec3 newVector;
+	float Pz;
+
+	Pz = ((vector.x * Px) + (vector.y * Py)) / vector.z;
+
+	return newVector = glm::vec3(Px, Py, Pz);
+}
 /////////Forward declarations
 namespace LilSpheres
 {
@@ -41,8 +56,9 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 	currentLifespan = new float[maxParticles];
 	maxParticleLifetime = 80.f;
 
-	cascadeStartingPoint = glm::vec3(-5.f, 0.f, -5.f);
-	cascadeEndingPoint = glm::vec3(5.f, 1.f, 5.f);
+	cascadeStartingPoint = glm::vec3(2.f, 2.f, -4.f);
+	cascadeEndingPoint = glm::vec3(2.f, 2.f, 2.f);
+
 	cascadeRotationAngle = 10.f;
 	cascadeStartingVelocity = glm::vec3 (0.f, 5.f, 5.f);
 	
@@ -158,6 +174,12 @@ void ParticleSystem::SetMaxLifetime(int newVal)
 	maxParticleLifetime = newVal;
 }
 
+void ParticleSystem::SetCascadePoints(glm::vec3 startingP, glm::vec3 endingP)
+{
+	cascadeStartingPoint = startingP;
+	cascadeEndingPoint = endingP;
+}
+
 void ParticleSystem::ResetParticle(int particleId)
 {
 	SetParticlePosition(particleId, GetParticleInitialPositionAA2(particleId, currentNumParticles));
@@ -184,27 +206,20 @@ void ParticleSystem::SetNumParticles(int newVal)
 
 void ParticleSystem::CascadeMode(int particleId)
 {
-	float sinVel;
-	float cosVel;
-
-	glm::vec3 ABVector = cascadeEndingPoint - cascadeStartingPoint;
+	glm::vec3 ABVector = CalculateVectorBetweenTwoPointsP(cascadeEndingPoint, cascadeStartingPoint);
 
 	int randomPositionPerCent = rand() % 100;
 
-	currentPositions[particleId].x = (ABVector.x * randomPositionPerCent) / 100;
-	currentPositions[particleId].y = (ABVector.y * randomPositionPerCent) / 100;
-	currentPositions[particleId].z = (ABVector.z * randomPositionPerCent) / 100;
+	currentPositions[particleId].x = ((ABVector.x * randomPositionPerCent) / 100) + cascadeStartingPoint.x;
+	currentPositions[particleId].y = ((ABVector.y * randomPositionPerCent) / 100) + cascadeStartingPoint.y;
+	currentPositions[particleId].z = ((ABVector.z * randomPositionPerCent) / 100) + cascadeStartingPoint.z;
 
-	
-	cascadeStartingVelocityMag = sqrt(pow(cascadeStartingVelocity.x, 2) + 
-									pow(cascadeStartingVelocity.y, 2) + 
-									pow(cascadeStartingVelocity.z, 2));
+	glm::vec3 vectorU = glm::normalize(CalculatePerpendicularVectorP(ABVector, currentPositions[particleId].x, currentPositions[particleId].y));
+	glm::vec3 vectorPerpendicularToUAndAB = glm::normalize(glm::cross(ABVector, vectorU));
 
-	sinVel = glm::sin(cascadeRotationAngle) * cascadeStartingVelocityMag;
-	cosVel = glm::cos(cascadeRotationAngle) * cascadeStartingVelocityMag;
-	
-	currentVelocities[particleId].x += cosVel;
-	currentVelocities[particleId].y += sinVel;
+	currentVelocities[particleId].x = glm::cos(75) * glm::length(vectorU);
+	currentVelocities[particleId].y = glm::sin(75) * glm::length(vectorPerpendicularToUAndAB);
+	currentVelocities[particleId].z = 0;
 
 	SetStartingValues();
 }
