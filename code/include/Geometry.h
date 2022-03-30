@@ -53,5 +53,20 @@ private:
     CustomSphere* sphereC;
 };
 
+class CustomCapsule
+{
+public:
+    CustomCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
+    ~CustomCapsule();
 
+    glm::vec3 CalculateVectorAB();
+    bool CheckCollisionCapsule(glm::vec3 particlePos);
+    void CalculateCollision();
 
+private:
+    CustomCapsule* capsule;
+
+    glm::vec3 positionA;
+    glm::vec3 positionB;
+    float capsuleRadius;
+};

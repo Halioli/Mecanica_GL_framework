@@ -37,6 +37,7 @@ float CalculatePlaneD(glm::vec3 normalVector, glm::vec3 planePoint)
     return D;
 }
 
+// === PLANE ===
 Plane::Plane(glm::vec3 point, glm::vec3 normal)
 {
     planePoint = point;
@@ -116,6 +117,8 @@ glm::vec3* Plane::CalculateParticleMirror(glm::vec3 currentPos, glm::vec3 curren
     return mirrorRes;
 }
 
+
+// === SPHERE ===
 CustomSphere::CustomSphere(float radiusS, glm::vec3 centerS) 
 {
     sphereRadius = radiusS;
@@ -200,14 +203,49 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos,
 
 void CustomSphere::SphereMovement(bool enable)
 {
-    if (enable) {
-        switch (sphereMovement) {
+    if (enable) 
+    {
+        switch (sphereMovement) 
+        {
         case LEFT:
             sphereCenter.x -= 0.1f;
             break;
+
         case RIGHT:
             sphereCenter.x += 0.1f;
             break;
         }
     }
+}
+
+
+// === CAPSULE ===
+CustomCapsule::CustomCapsule(glm::vec3 posA, glm::vec3 posB, float radius)
+{
+    positionA = posA;
+    positionB = posB;
+    capsuleRadius = radius;
+}
+
+CustomCapsule::~CustomCapsule()
+{
+
+}
+
+glm::vec3 CustomCapsule::CalculateVectorAB()
+{
+    return positionB - positionA;
+}
+
+bool CustomCapsule::CheckCollisionCapsule(glm::vec3 particlePos)
+{
+    return glm::distance(CalculateVectorAB(), particlePos) <= capsuleRadius;
+}
+
+void CustomCapsule::CalculateCollision()
+{
+    glm::vec3 kPreviousPos; // No sé com trobar-ho
+    glm::vec3 kCurrentPos; // No sé com trobar-ho
+    glm::vec3 kCollisionPos; // No sé com trobar-ho
+
 }
