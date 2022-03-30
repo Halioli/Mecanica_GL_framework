@@ -183,10 +183,7 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos,
         pointOfCollision = previousParticlePos + (λRect[0] * vecRes);
     }
 
-    std::printf("distance %f\n", glm::distance(pointOfCollision, sphereCenter));
-
     return pointOfCollision;
-
 }
 
 void CustomSphere::SphereMovement(bool enable)

@@ -117,17 +117,14 @@ void AA2::Update(float dt)
 			{
 			case LilSpheres::NORMAL:
 				particles->ResetParticle(i);
-				std::printf("Mode: NORMAL");
 				break;
 
 			case LilSpheres::CASCADE:
 				particles->ResetParticleCascade(i);
-				std::printf("Mode: CASCADE");
 				break;
 
 			case LilSpheres::FOUNTAIN:
 				particles->ResetParticle(i);
-				std::printf("Mode: FOUNTAIN");
 				break;
 
 			default:
