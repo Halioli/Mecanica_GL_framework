@@ -53,24 +53,6 @@ int particleNum = 40;
 
 extern glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles);
 
-// Auxiliar methods
-#pragma region auxiliar
-
-
-bool CheckHasTravessedFloorAA2(glm::vec3 particle)
-{
-	// This should be done with:
-	// (n * p + d) * (n * p' + d) * n
-	if (particle.y <= 0.0f)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-#pragma endregion
-
 #pragma region class
 AA2::AA2()
 {
@@ -84,11 +66,15 @@ AA2::AA2()
 			case LilSpheres::NORMAL:
 				particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
 				break;
+
 			case LilSpheres::CASCADE:
 				particles->CascadeMode(i);
+				break;
+
 			case LilSpheres::FOUNTAIN:
 				particles->FountainMode(i);
 				break;
+
 			default:
 				particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
 				break;
@@ -127,31 +113,30 @@ void AA2::Update(float dt)
 		particles->IncrementCurrentLifespan(i);
 		if (particles->CheckParticleLifespan(i))
 		{
-			switch (particles->particleMode) {
+			switch (particles->particleMode) 
+			{
 			case LilSpheres::NORMAL:
 				particles->ResetParticle(i);
 				std::printf("Mode: NORMAL");
 				break;
+
 			case LilSpheres::CASCADE:
 				particles->ResetParticleCascade(i);
-				std::printf("Mode: Cascade");
+				std::printf("Mode: CASCADE");
 				break;
+
 			case LilSpheres::FOUNTAIN:
 				particles->ResetParticle(i);
-				std::printf("Mode: Fountain");
+				std::printf("Mode: FOUNTAIN");
 				break;
+
 			default:
 				particles->ResetParticle(i);
 				break;
 			}
 		}
 
-		// Check if a particle travessed the floor plane. Restart its position if it had
-		/*if (CheckHasTravessedFloorAA2(particles->GetCurrentParticlePosition(i)))
-		{
-			particles->SetParticlePosition(i, GetParticleInitialPositionAA2(i, numParticles));
-		}*/
-
+		// === Check Plane Collisions ===
 		if (Planes::bottomPlane.CheckBottomColision(particles->GetCurrentParticlePosition(i)))
 		{
 			mirrorRes = Planes::bottomPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i), 
@@ -187,6 +172,7 @@ void AA2::Update(float dt)
 			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
+
 		if (Planes::frontPlane.CheckFrontColision(particles->GetCurrentParticlePosition(i)))
 		{
 			mirrorRes = Planes::frontPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
@@ -205,6 +191,7 @@ void AA2::Update(float dt)
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
 
+		// === Check Sphere Collisions ===
 		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
 		{
 			mirrorRes = Sphere::customSphere.CalculateParticleMirror(particles->GetPreviousParticlePosition(i), 
@@ -213,8 +200,6 @@ void AA2::Update(float dt)
 			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
 			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 		}
-
-
 	}
 
 	Sphere::customSphere.SphereMovement(renderSphere);
@@ -238,7 +223,6 @@ void AA2::RenderGui()
 		Sphere::customSphere.sphereRadius = 0.f;
 	}
 
-
 	if (renderParticles) 
 	{
 		ImGui::SliderInt(
@@ -255,14 +239,10 @@ void AA2::RenderGui()
 			360 // max
 		);
 
-
 		//No funciona bé
 		ImGui::RadioButton("Normal", &particles->particleMode, LilSpheres::NORMAL);
 		ImGui::RadioButton("Cascade", &particles->particleMode, LilSpheres::CASCADE);
 		ImGui::RadioButton("Fountain", &particles->particleMode, LilSpheres::FOUNTAIN);
-
-
-
 
 		/*ImGui::InputFloat3(
 			"Segment A",
@@ -295,16 +275,16 @@ void AA2::RenderGui()
 		{
 			Sphere::customSphere.sphereCenter = glm::vec3(0.f, 1.f, 0.f);
 		}
+	}
 
-		if (renderCapsule) 
-		{
-			ImGui::SliderFloat3(
-				"Capsule A",
-				&capsuleA.x,
-				-5.f,
-				10.f
-			);
-		}
+	if (renderCapsule)
+	{
+		ImGui::SliderFloat3(
+			"Capsule A",
+			&capsuleA.x,
+			-5.f,
+			10.f
+		);
 	}
 };
 

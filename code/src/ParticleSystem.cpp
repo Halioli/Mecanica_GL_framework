@@ -23,6 +23,7 @@ glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles)
 
 	return glm::vec3(x, y, z);
 }
+
 ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 {
 	particleMode = CASCADE;
@@ -190,7 +191,7 @@ void ParticleSystem::CascadeMode(int particleId)
 
 	int randomPositionPerCent = rand() % 100;
 
-	currentPositions[particleId].x = (ABVector.x * randomPositionPerCent)/100;
+	currentPositions[particleId].x = (ABVector.x * randomPositionPerCent) / 100;
 	currentPositions[particleId].y = (ABVector.y * randomPositionPerCent) / 100;
 	currentPositions[particleId].z = (ABVector.z * randomPositionPerCent) / 100;
 
