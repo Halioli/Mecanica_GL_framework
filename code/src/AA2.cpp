@@ -45,11 +45,11 @@ namespace LilSpheres
 	};
 
 	//No ho agafa
-	glm::vec3 cascadeStartingPoint = glm::vec3(2.f, 2.f, -4.f);
-	glm::vec3 cascadeEndingPoint = glm::vec3(2.f, 2.f, 2.f);
+	glm::vec3 cascadeStartingPoint = glm::vec3(-4.f, 4.f, -4.f);
+	glm::vec3 cascadeEndingPoint = glm::vec3(-4.f, 4.f, 2.f);
 }
 
-int particleNum = 40;
+int particleNum = 1500;
 
 extern glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles);
 
@@ -57,7 +57,7 @@ extern glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles);
 AA2::AA2()
 {
 	srand(time(NULL));
-	numParticles = 40;
+	numParticles = 1500;
 	particles = new ParticleSystem(numParticles);
 
 	for (int i = 0; i < numParticles; i++)
@@ -111,93 +111,99 @@ void AA2::Update(float dt)
 
 	for (int i = 0; i < numParticles; i++)
 	{
-		particles->IncrementCurrentLifespan(i);
-		if (particles->CheckParticleLifespan(i))
-		{
-			switch (particles->particleMode) 
+		if(!particles->CheckParticleDelay(i)){
+			particles->DecrementDelayTime(i);
+		}
+		else {
+			particles->IncrementCurrentLifespan(i);
+
+			if (particles->CheckParticleLifespan(i))
 			{
-			case LilSpheres::NORMAL:
-				particles->ResetParticle(i);
-				break;
+				switch (particles->particleMode)
+				{
+				case LilSpheres::NORMAL:
+					particles->ResetParticle(i);
+					break;
 
-			case LilSpheres::CASCADE:
-				particles->ResetParticleCascade(i);
-				break;
+				case LilSpheres::CASCADE:
+					particles->ResetParticleCascade(i);
+					break;
 
-			case LilSpheres::FOUNTAIN:
-				particles->ResetParticle(i);
-				break;
+				case LilSpheres::FOUNTAIN:
+					particles->ResetParticle(i);
+					break;
 
-			default:
-				particles->ResetParticle(i);
-				break;
+				default:
+					particles->ResetParticle(i);
+					break;
+				}
+			}
+			// === Check Plane Collisions ===
+			if (Planes::bottomPlane.CheckBottomColision(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Planes::bottomPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+					particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			if (Planes::topPlane.CheckTopColision(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Planes::topPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+					particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			if (Planes::leftPlane.CheckLeftColision(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Planes::leftPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+					particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			if (Planes::rightPlane.CheckRightColision(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Planes::rightPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+					particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			if (Planes::frontPlane.CheckFrontColision(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Planes::frontPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+					particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			if (Planes::backPlane.CheckBackColision(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Planes::backPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
+					particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			// === Check Sphere Collisions ===
+			if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
+			{
+				mirrorRes = Sphere::customSphere.CalculateParticleMirror(particles->GetPreviousParticlePosition(i),
+					particles->GetCurrentParticlePosition(i), particles->GetCurrentParticleVelocity(i));
+
+				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
+				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
 			}
 		}
-
-		// === Check Plane Collisions ===
-		if (Planes::bottomPlane.CheckBottomColision(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Planes::bottomPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i), 
-																	particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
 		
-		if (Planes::topPlane.CheckTopColision(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Planes::topPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i), 
-																	particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
-
-		if (Planes::leftPlane.CheckLeftColision(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Planes::leftPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
-				particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
-
-		if (Planes::rightPlane.CheckRightColision(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Planes::rightPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
-				particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
-
-		if (Planes::frontPlane.CheckFrontColision(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Planes::frontPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
-				particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
-
-		if (Planes::backPlane.CheckBackColision(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Planes::backPlane.CalculateParticleMirror(particles->GetCurrentParticlePosition(i),
-				particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
-
-		// === Check Sphere Collisions ===
-		if (Sphere::customSphere.CheckCollisionSphere(particles->GetCurrentParticlePosition(i)))
-		{
-			mirrorRes = Sphere::customSphere.CalculateParticleMirror(particles->GetPreviousParticlePosition(i), 
-							particles->GetCurrentParticlePosition(i), particles->GetCurrentParticleVelocity(i));
-
-			particles->SetMirrorParticlePosition(i, mirrorRes[0]);
-			particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
-		}
 	}
 
 	Sphere::customSphere.SphereMovement(renderSphere);

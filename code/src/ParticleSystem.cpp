@@ -56,11 +56,14 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 	currentLifespan = new float[maxParticles];
 	maxParticleLifetime = 80.f;
 
-	cascadeStartingPoint = glm::vec3(2.f, 2.f, -4.f);
-	cascadeEndingPoint = glm::vec3(2.f, 2.f, 2.f);
+	cascadeStartingPoint = glm::vec3(-4.f, 4.f, -4.f);
+	cascadeEndingPoint = glm::vec3(-4.f, 4.f, 2.f);
 
 	cascadeRotationAngle = 10.f;
 	cascadeStartingVelocity = glm::vec3 (0.f, 5.f, 5.f);
+
+	delayTime = new float [maxParticles];
+	delayRange = 30;
 	
 	for (int i = 0; i < maxParticles; i++)
 	{
@@ -74,6 +77,7 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 		startingVelocities[i] = currentVelocities[i];
 
 		currentLifespan[i] = 0.f;
+		delayTime[i] = rand() % delayRange;
 	}
 };
 
@@ -87,6 +91,7 @@ ParticleSystem::~ParticleSystem()
 	delete startingPositions;
 	delete startingVelocities;
 	delete currentLifespan;
+	delete delayTime;
 };
 
 int ParticleSystem::GetNumberOfParticles()
@@ -169,6 +174,16 @@ void ParticleSystem::IncrementCurrentLifespan(int particleId)
 	++currentLifespan[particleId];
 }
 
+void ParticleSystem::DecrementDelayTime(int particleId)
+{
+	--delayTime[particleId];
+}
+
+bool ParticleSystem::CheckParticleDelay(int particleId)
+{
+	return delayTime[particleId] <= 0;
+}
+
 void ParticleSystem::SetMaxLifetime(int newVal)
 {
 	maxParticleLifetime = newVal;
@@ -191,6 +206,7 @@ void ParticleSystem::ResetParticleCascade(int particleId)
 {
 	CascadeMode(particleId);
 	currentLifespan[particleId] = 0.f;
+	delayTime[particleId] = rand() % delayRange;
 }
 
 void ParticleSystem::ResetParticleFountain(int particleId)
@@ -217,9 +233,17 @@ void ParticleSystem::CascadeMode(int particleId)
 	glm::vec3 vectorU = glm::normalize(CalculatePerpendicularVectorP(ABVector, currentPositions[particleId].x, currentPositions[particleId].y));
 	glm::vec3 vectorPerpendicularToUAndAB = glm::normalize(glm::cross(ABVector, vectorU));
 
-	currentVelocities[particleId].x = glm::cos(75) * glm::length(vectorU);
-	currentVelocities[particleId].y = glm::sin(75) * glm::length(vectorPerpendicularToUAndAB);
-	currentVelocities[particleId].z = 0;
+	if (ABVector.z > ABVector.x) {
+		currentVelocities[particleId].x = glm::cos(75) * glm::length(vectorU);
+		currentVelocities[particleId].y = glm::sin(75) * glm::length(vectorPerpendicularToUAndAB);
+		currentVelocities[particleId].z = 0;
+	}
+	else {
+		currentVelocities[particleId].x = 0;
+		currentVelocities[particleId].y = glm::sin(75) * glm::length(vectorPerpendicularToUAndAB);
+		currentVelocities[particleId].z = glm::cos(75) * glm::length(vectorU);
+	}
+	
 
 	SetStartingValues();
 }

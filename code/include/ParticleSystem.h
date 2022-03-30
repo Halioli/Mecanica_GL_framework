@@ -34,6 +34,9 @@ public:
 	void SetStartingValues();
 	void FountainMode(int particleId);
 	void ResetParticleFountain(int particleId);
+	void DecrementDelayTime(int particleId);
+	bool CheckParticleDelay(int particleId);
+	void ResetDelay(int particleId);
 
 	void SetCascadePoints(glm::vec3 startingP, glm::vec3 endingP);
 	enum ParticleMode {
@@ -47,6 +50,8 @@ public:
 	glm::vec3 cascadeStartingPoint;
 	glm::vec3 cascadeEndingPoint;
 
+	float* delayTime;
+
 private:
 	int currentNumParticles;
 	int maxParticles;
@@ -59,6 +64,7 @@ private:
 	glm::vec3* startingPositions;
 	glm::vec3* startingVelocities;
 
+	int delayRange;
 	
 	glm::vec3 cascadeStartingVelocity;
 	int cascadeRotationAngle;
