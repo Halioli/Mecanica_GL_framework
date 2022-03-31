@@ -177,9 +177,10 @@ glm::vec3 CustomSphere::CalculatePointOfCollision(glm::vec3 previousParticlePos,
         pow(previousParticlePos.y - sphereCenter.y, 2) + 
         pow(previousParticlePos.z - sphereCenter.z, 2)) - pow(sphereRadius, 2);
 
-    b = (2 * previousParticlePos.x * vecRes.x) + (-2 * sphereCenter.x * vecRes.x) +
+    b = (2 * glm::dot(previousParticlePos, vecRes)) + (-2 * glm::dot(sphereCenter, vecRes));
+    /*b = (2 * previousParticlePos.x * vecRes.x) + (-2 * sphereCenter.x * vecRes.x) +
         (2 * previousParticlePos.y * vecRes.y) + (-2 * sphereCenter.y * vecRes.y) +
-        (2 * previousParticlePos.z * vecRes.z) + (-2 * sphereCenter.z * vecRes.z);
+        (2 * previousParticlePos.z * vecRes.z) + (-2 * sphereCenter.z * vecRes.z);*/
 
     a = pow(vecRes.x, 2) +
         pow(vecRes.y, 2) +
@@ -242,10 +243,30 @@ bool CustomCapsule::CheckCollisionCapsule(glm::vec3 particlePos)
     return glm::distance(CalculateVectorAB(), particlePos) <= capsuleRadius;
 }
 
-void CustomCapsule::CalculateCollision()
+void CustomCapsule::CalculateCollision(glm::vec3 previousPos, glm::vec3 currentPos)
 {
-    glm::vec3 kPreviousPos; // No sé com trobar-ho
-    glm::vec3 kCurrentPos; // No sé com trobar-ho
-    glm::vec3 kCollisionPos; // No sé com trobar-ho
+    glm::vec3 vecAB = CalculateVectorAB();
+    glm::vec3 kPreviousPos;
+    glm::vec3 kCurrentPos;
+    float lambdaPrevPos;
+    float lambdaCurrPos;
 
+    // lambda = -PA / AB
+    //lambdaPrevPos = -(positionA - previousPos) / vecAB;
+    //lambdaCurrPos = -(positionA - currentPos) / vecAB;
+    //glm::clamp(lambdaPrevPos, positionA, positionB);
+
+    // K = A + lambda * AB
+    //kPreviousPos = positionA + lambdaPrevPos * vecAB;
+    //kCurrentPos = positionA + lambdaCurrPos * vecAB;
+
+}
+
+glm::vec3* CustomCapsule::CalculateParticleMirror(glm::vec3 previousPos, glm::vec3 currentPos, glm::vec3 currentVel)
+{
+    glm::vec3 mirrorRes[2];
+
+    // TODO
+
+    return mirrorRes;
 }

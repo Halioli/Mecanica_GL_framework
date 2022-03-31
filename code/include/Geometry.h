@@ -61,7 +61,8 @@ public:
 
     glm::vec3 CalculateVectorAB();
     bool CheckCollisionCapsule(glm::vec3 particlePos);
-    void CalculateCollision();
+    void CalculateCollision(glm::vec3 previousPos, glm::vec3 currentPos);
+    glm::vec3* CalculateParticleMirror(glm::vec3 previousPos, glm::vec3 currentPos, glm::vec3 currentVel);
 
 private:
     CustomCapsule* capsule;
