@@ -252,13 +252,13 @@ void CustomCapsule::CalculateCollision(glm::vec3 previousPos, glm::vec3 currentP
     float lambdaCurrPos;
 
     // lambda = -PA / AB
-    /*lambdaPrevPos = -(positionA - previousPos) / vecAB;
-    lambdaCurrPos = -(positionA - currentPos) / vecAB;
-    glm::clamp(lambdaPrevPos, positionA, positionB);*/
+    //lambdaPrevPos = -(positionA - previousPos) / vecAB;
+    //lambdaCurrPos = -(positionA - currentPos) / vecAB;
+    //glm::clamp(lambdaPrevPos, positionA, positionB);
 
     // K = A + lambda * AB
-    kPreviousPos = positionA + lambdaPrevPos * vecAB;
-    kCurrentPos = positionA + lambdaCurrPos * vecAB;
+    //kPreviousPos = positionA + lambdaPrevPos * vecAB;
+    //kCurrentPos = positionA + lambdaCurrPos * vecAB;
 
 }
 
