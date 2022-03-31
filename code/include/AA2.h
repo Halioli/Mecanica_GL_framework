@@ -18,11 +18,12 @@ public:
 	void RenderUpdate();
 	void RenderGui();
 
+	int EmissionRate(int numParticles, float dt);
 	int numParticles;
 private:
 	ParticleSystem* particles;
 	
-
+	float emissionRate;
 
 	glm::vec3 capsuleA;
 	glm::vec3 capsuleB;

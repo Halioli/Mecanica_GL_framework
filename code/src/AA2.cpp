@@ -53,6 +53,7 @@ namespace LilSpheres
 int particleNum = 1500;
 
 extern glm::vec3 GetParticleInitialPositionAA2(int id, int numParticles);
+ 
 
 #pragma region class
 AA2::AA2()
@@ -60,6 +61,7 @@ AA2::AA2()
 	srand(time(NULL));
 	numParticles = 1500;
 	particles = new ParticleSystem(numParticles);
+	emissionRate = 80.f * (1.f/30);
 
 	for (int i = 0; i < numParticles; i++)
 	{
@@ -105,19 +107,15 @@ void AA2::Update(float dt)
 	glm::vec3* mirrorRes;
 
 	eulerInt.Step(particles, dt);
-
-	particles->SetMaxLifetime(LilSpheres::maxLifetime);
-	particles->SetNumParticles(particleNum);
-	particles->SetCascadePoints(LilSpheres::cascadeStartingPoint, LilSpheres::cascadeEndingPoint);
-
+	
 	for (int i = 0; i < numParticles; i++)
 	{
-		if(!particles->CheckParticleDelay(i)){
+		/*if(!particles->CheckParticleDelay(i)){
 			particles->DecrementDelayTime(i);
 		}
-		else {
+		else {*/
 			particles->IncrementCurrentLifespan(i);
-
+			
 			if (particles->CheckParticleLifespan(i))
 			{
 				switch (particles->particleMode)
@@ -127,7 +125,7 @@ void AA2::Update(float dt)
 					break;
 
 				case LilSpheres::CASCADE:
-					particles->ResetParticleCascade(i);
+						particles->ResetParticleCascade(i);
 					break;
 
 				case LilSpheres::FOUNTAIN:
@@ -211,8 +209,6 @@ void AA2::Update(float dt)
 			}
 		}
 		
-	}
-
 	Sphere::customSphere.SphereMovement(renderSphere);
 }
 
@@ -297,6 +293,8 @@ void AA2::RenderGui()
 		);
 	}
 };
+
+                         
 
 #pragma endregion
 

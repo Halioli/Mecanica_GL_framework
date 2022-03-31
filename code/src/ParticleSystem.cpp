@@ -59,7 +59,7 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 	cascadeStartingPoint = glm::vec3(-4.f, 4.f, -4.f);
 	cascadeEndingPoint = glm::vec3(-4.f, 4.f, 2.f);
 
-	cascadeRotationAngle = 10.f;
+	cascadeRotationAngle = 30.f;
 	cascadeStartingVelocity = glm::vec3 (0.f, 5.f, 5.f);
 
 	delayTime = new float [maxParticles];
@@ -234,8 +234,8 @@ void ParticleSystem::CascadeMode(int particleId)
 	glm::vec3 vectorPerpendicularToUAndAB = glm::normalize(glm::cross(ABVector, vectorU));
 
 	if (ABVector.z > ABVector.x) {
-		currentVelocities[particleId].x = glm::cos(75) * glm::length(vectorU);
-		currentVelocities[particleId].y = glm::sin(75) * glm::length(vectorPerpendicularToUAndAB);
+		currentVelocities[particleId].x = glm::cos(cascadeRotationAngle) * glm::length(vectorU);
+		currentVelocities[particleId].y = glm::sin(cascadeRotationAngle) * glm::length(vectorPerpendicularToUAndAB);
 		currentVelocities[particleId].z = 0;
 	}
 	else {
@@ -266,3 +266,4 @@ void ParticleSystem::FountainMode(int particleId)
 
 	SetStartingValues();
 }
+
