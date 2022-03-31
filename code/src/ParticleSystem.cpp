@@ -59,12 +59,14 @@ ParticleSystem::ParticleSystem(int numParticles) : maxParticles(numParticles)
 	cascadeStartingPoint = glm::vec3(-4.f, 4.f, -4.f);
 	cascadeEndingPoint = glm::vec3(-4.f, 4.f, 2.f);
 
-	cascadeRotationAngle = 30.f;
+	cascadeRotationAngle = 45.f;
 	cascadeStartingVelocity = glm::vec3 (0.f, 5.f, 5.f);
 
+	fountainPosition = glm::vec3(0.f, 4.f, 0.f);
 	delayTime = new float [maxParticles];
 	delayRange = 30;
-	
+	fountainRange = 300;
+
 	for (int i = 0; i < maxParticles; i++)
 	{
 		currentPositions[i] = glm::vec3(0.f, 0.f, 0.f);
@@ -189,10 +191,11 @@ void ParticleSystem::SetMaxLifetime(int newVal)
 	maxParticleLifetime = newVal;
 }
 
-void ParticleSystem::SetCascadePoints(glm::vec3 startingP, glm::vec3 endingP)
+void ParticleSystem::SetCascadePoints(glm::vec3 startingP, glm::vec3 endingP, float cascadeAngle)
 {
 	cascadeStartingPoint = startingP;
 	cascadeEndingPoint = endingP;
+	cascadeRotationAngle = cascadeAngle;
 }
 
 void ParticleSystem::ResetParticle(int particleId)
@@ -213,6 +216,7 @@ void ParticleSystem::ResetParticleFountain(int particleId)
 {
 	FountainMode(particleId);
 	currentLifespan[particleId] = 0.f;
+	delayTime[particleId] = rand() % delayRange;
 }
 
 void ParticleSystem::SetNumParticles(int newVal)
@@ -233,17 +237,9 @@ void ParticleSystem::CascadeMode(int particleId)
 	glm::vec3 vectorU = glm::normalize(CalculatePerpendicularVectorP(ABVector, currentPositions[particleId].x, currentPositions[particleId].y));
 	glm::vec3 vectorPerpendicularToUAndAB = glm::normalize(glm::cross(ABVector, vectorU));
 
-	if (ABVector.z > ABVector.x) {
-		currentVelocities[particleId].x = glm::cos(cascadeRotationAngle) * glm::length(vectorU);
-		currentVelocities[particleId].y = glm::sin(cascadeRotationAngle) * glm::length(vectorPerpendicularToUAndAB);
+	currentVelocities[particleId].x = glm::cos(glm::radians(cascadeRotationAngle)) * glm::length(vectorU) * 4;
+		currentVelocities[particleId].y = glm::sin(glm::radians(cascadeRotationAngle)) * glm::length(vectorPerpendicularToUAndAB) * 4;
 		currentVelocities[particleId].z = 0;
-	}
-	else {
-		currentVelocities[particleId].x = 0;
-		currentVelocities[particleId].y = glm::sin(75) * glm::length(vectorPerpendicularToUAndAB);
-		currentVelocities[particleId].z = glm::cos(75) * glm::length(vectorU);
-	}
-	
 
 	SetStartingValues();
 }
@@ -256,14 +252,27 @@ void ParticleSystem::SetStartingValues()
 
 void ParticleSystem::FountainMode(int particleId) 
 {
-	startingPositions[particleId] = fountainPosition; 
+	currentPositions[particleId].x = fountainPosition.x; 
+	currentPositions[particleId].y = fountainPosition.y; 
+	currentPositions[particleId].z = fountainPosition.z; 
 
-	/*fountainStartingVelocity.x = rand() % fountainAngle;
-	fountainStartingVelocity.y = rand() % fountainAngle;
-	fountainStartingVelocity.z = rand() % fountainAngle;*/
-	
-	currentVelocities[particleId] = fountainStartingVelocity;
+	int randomRangeX = rand() % 100 + (-50);
+	int randomRangeZ = rand() % 100 + (-50);
+
+	glm::vec3 fountainPointToGo = glm::vec3(randomRangeX, fountainPosition.y + 1, randomRangeZ);
+
+	glm::vec3 velocityVector = glm::normalize(CalculateVectorBetweenTwoPointsP(fountainPointToGo, fountainPosition));
+
+
+	currentVelocities[particleId].x = velocityVector.x * 2;
+	currentVelocities[particleId].y = velocityVector.y * fountainRange;
+	currentVelocities[particleId].z = velocityVector.z * 2;
 
 	SetStartingValues();
 }
 
+void ParticleSystem::SetFountainValues(glm::vec3 fountainPos, int dispersion)
+{
+	fountainPosition = fountainPos;
+	fountainRange = dispersion;
+}

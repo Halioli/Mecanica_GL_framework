@@ -23,6 +23,7 @@ namespace Sphere
 {
 	extern void updateSphere(glm::vec3 pos, float radius = 1.f);
 	CustomSphere customSphere(1.f, glm::vec3(0.f, 2.f, 0.f));
+	bool resetedRadius = true;
 }
 
 namespace Capsule 
@@ -48,6 +49,10 @@ namespace LilSpheres
 	//No ho agafa
 	glm::vec3 cascadeStartingPoint = glm::vec3(-4.f, 4.f, -4.f);
 	glm::vec3 cascadeEndingPoint = glm::vec3(-4.f, 4.f, 2.f);
+	glm::vec3 fountainPosition = glm::vec3(0.f, 4.f, 0.f);
+
+	float cascadeAngle = 45.f;
+	int fountainDispersion = 300;
 }
 
 int particleNum = 1500;
@@ -108,14 +113,20 @@ void AA2::Update(float dt)
 
 	eulerInt.Step(particles, dt);
 	
+	particles->SetMaxLifetime(LilSpheres::maxLifetime);
+	particles->SetNumParticles(particleNum);
+	particles->SetCascadePoints(LilSpheres::cascadeStartingPoint, LilSpheres::cascadeEndingPoint, LilSpheres::cascadeAngle);
+	particles->SetFountainValues(LilSpheres::fountainPosition, LilSpheres::fountainDispersion);
+
 	for (int i = 0; i < numParticles; i++)
 	{
-		/*if(!particles->CheckParticleDelay(i)){
+		if (!particles->CheckParticleDelay(i)) 
+		{
 			particles->DecrementDelayTime(i);
 		}
-		else {*/
+		else {
 			particles->IncrementCurrentLifespan(i);
-			
+
 			if (particles->CheckParticleLifespan(i))
 			{
 				switch (particles->particleMode)
@@ -125,11 +136,11 @@ void AA2::Update(float dt)
 					break;
 
 				case LilSpheres::CASCADE:
-						particles->ResetParticleCascade(i);
+					particles->ResetParticleCascade(i);
 					break;
 
 				case LilSpheres::FOUNTAIN:
-					particles->ResetParticle(i);
+					particles->ResetParticleFountain(i);
 					break;
 
 				default:
@@ -208,6 +219,7 @@ void AA2::Update(float dt)
 
 			}
 		}
+	}
 		
 	Sphere::customSphere.SphereMovement(renderSphere);
 }
@@ -228,6 +240,12 @@ void AA2::RenderGui()
 	if (!renderSphere)
 	{
 		Sphere::customSphere.sphereRadius = 0.f;
+		Sphere::resetedRadius = false;
+	}
+	else if (!Sphere::resetedRadius) 
+	{
+		Sphere::customSphere.sphereRadius = 1.f;
+		Sphere::resetedRadius = true;
 	}
 
 	if (renderParticles) 
@@ -236,7 +254,7 @@ void AA2::RenderGui()
 			"Number of particles", //label
 			&particleNum, // where the value exists
 			0, // min
-			40 // max
+			1500 // max
 		);
 
 		ImGui::SliderInt(
@@ -250,14 +268,33 @@ void AA2::RenderGui()
 		ImGui::RadioButton("Cascade", &particles->particleMode, LilSpheres::CASCADE);
 		ImGui::RadioButton("Fountain", &particles->particleMode, LilSpheres::FOUNTAIN);
 
-		ImGui::InputFloat3(
-			"Segment A",
-			&LilSpheres::cascadeStartingPoint.x
-		);
+			ImGui::InputFloat3(
+				"Segment A",
+				&LilSpheres::cascadeStartingPoint.x
+			);
 
+			ImGui::InputFloat3(
+				"Segment B",
+				&LilSpheres::cascadeEndingPoint.x
+			);
+
+			ImGui::SliderFloat(
+				"Cascade angle",
+				&LilSpheres::cascadeAngle,
+				1,
+				360
+			);
+		
 		ImGui::InputFloat3(
-			"Segment B",
-			&LilSpheres::cascadeEndingPoint.x
+				"Fountain Position",
+				&LilSpheres::fountainPosition.x
+			);
+		
+		ImGui::SliderInt(
+			"Fountain Dispersion",
+			&LilSpheres::fountainDispersion,
+			50,
+			500
 		);
 	}
 
