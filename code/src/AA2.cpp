@@ -28,6 +28,7 @@ namespace Sphere
 namespace Capsule 
 {
 	extern void updateCapsule(glm::vec3 posA, glm::vec3 posB, float radius);
+	CustomCapsule customCapsule(glm::vec3(2.f, 3.f, 0.f), glm::vec3(4.f, 4.f, 0.f), 1.f);
 }
 
 namespace LilSpheres 
@@ -201,6 +202,12 @@ void AA2::Update(float dt)
 
 				particles->SetMirrorParticlePosition(i, mirrorRes[0]);
 				particles->SetMirrorParticleVelocity(i, mirrorRes[1]);
+			}
+
+			// === Check Capsule Collisions ===
+			if (Capsule::customCapsule.CheckCollisionCapsule(particles->GetCurrentParticlePosition(i)))
+			{
+
 			}
 		}
 		
